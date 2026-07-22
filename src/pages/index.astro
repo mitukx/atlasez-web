@@ -27,84 +27,185 @@ const structuredData = {
 >
   <div class="container">
     <section class="intro" aria-labelledby="intro-heading">
-      <h1 id="intro-heading">Atlasez</h1>
-      <p class="philosophy">{ORG.philosophy}</p>
-      <p class="reading">
-        Atlasezは、学生が中心となって「学び」を支える活動に取り組む団体です。
-        無料・広告なしの学習サイト「アトラス」の運営を中心に、
-        ゼミプラットフォームや対話イベントなど、学びをめぐる複数のプロジェクトを進めています。
-      </p>
-      <p class="intro-actions">
-        <a class="button" href={withBase("/about/")}>Atlasezとは</a>
-        <a class="button button-secondary" href={withBase("/join/")}
-          >運営に参加する</a
-        >
-        <a class="button button-secondary" href={withBase("/contact/")}
-          >お問い合わせ</a
-        >
-      </p>
+      <div class="intro-main">
+        <p class="eyebrow">STUDENT COLLECTIVE / SINCE 2022</p>
+        <h1 id="intro-heading">学びをつくる学生団体、Atlasez。</h1>
+        <p class="intro-copy">
+          学生が中心となり、無料・広告なしの学習サイト「アトラス」を編集しています。
+          ゼミの運営基盤や対話イベントも含め、学ぶ人同士が知識を持ち寄れる場所をつくります。
+        </p>
+        <p class="intro-actions">
+          <a class="button" href={withBase("/about/")}>団体について読む</a>
+          <a href={withBase("/join/")}>運営に参加する</a>
+          <a href={withBase("/contact/")}>連絡する</a>
+        </p>
+      </div>
+      <aside class="statement" aria-label="Atlasezの理念">
+        <p class="side-label">STATEMENT</p>
+        <p>{ORG.philosophy}</p>
+        <p class="statement-note">
+          学習コンテンツを一方的に届けるのではなく、学生自身が編集・運営に関わることを重視しています。
+        </p>
+      </aside>
     </section>
 
-    <section aria-labelledby="projects-heading">
-      <h2 id="projects-heading">主要プロジェクト</h2>
-      <ul class="card-grid">
-        {
-          projects.map((p) => (
-            <li class="card">
-              <h3>
-                <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
-              </h3>
-              <p>{p.data.shortDescription}</p>
-              <p>
-                <span class="badge badge-accent">
+    <div class="home-columns">
+      <section aria-labelledby="projects-heading">
+        <header class="section-heading">
+          <span>01</span>
+          <div>
+            <p>PROJECT INDEX</p>
+            <h2 id="projects-heading">進行中の活動</h2>
+          </div>
+        </header>
+        <ol class="project-index">
+          {
+            projects.map((p, index) => (
+              <li>
+                <span class="item-no">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>
+                    <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
+                  </h3>
+                  <p>{p.data.shortDescription}</p>
+                </div>
+                <span class="status-text">
                   {p.data.status === "active" ? "活動中" : "準備中"}
                 </span>
-              </p>
-            </li>
-          ))
-        }
-      </ul>
-      <p><a href={withBase("/projects/")}>プロジェクト一覧 ›</a></p>
-    </section>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="index-link"><a href={withBase("/projects/")}>すべての活動を見る</a></p>
+      </section>
 
-    <section aria-labelledby="news-heading">
-      <h2 id="news-heading">最新のお知らせ</h2>
-      <ul class="news-list">
-        {
-          news.map((n) => (
-            <li>
-              <time datetime={n.data.date.toISOString().slice(0, 10)}>
-                {formatDate(n.data.date)}
-              </time>
-              <a href={withBase(`/news/${n.id.replace(/\.md$/, "")}/`)}>
-                {n.data.title}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <p><a href={withBase("/news/")}>お知らせ一覧 ›</a></p>
-    </section>
+      <section class="news-panel" aria-labelledby="news-heading">
+        <header class="section-heading compact">
+          <span>02</span>
+          <div>
+            <p>FIELD NOTES</p>
+            <h2 id="news-heading">お知らせ</h2>
+          </div>
+        </header>
+        <ul class="news-list">
+          {
+            news.map((n) => (
+              <li>
+                <time datetime={n.data.date.toISOString().slice(0, 10)}>
+                  {formatDate(n.data.date)}
+                </time>
+                <a href={withBase(`/news/${n.id.replace(/\.md$/, "")}/`)}>
+                  {n.data.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="index-link"><a href={withBase("/news/")}>お知らせ一覧</a></p>
+      </section>
+    </div>
   </div>
 </OrgLayout>
 
 <style>
   .intro {
-    max-width: var(--reading-width);
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(15rem, 0.8fr);
+    gap: clamp(2rem, 8vw, 7rem);
+    padding-block: clamp(2rem, 7vw, 5.5rem);
+    border-bottom: 1px solid var(--border-default);
   }
-  .philosophy {
-    font-size: calc(1.3rem * var(--text-scale));
-    font-weight: 700;
+  .eyebrow,
+  .side-label,
+  .section-heading p {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: calc(0.72rem * var(--text-scale));
+    letter-spacing: 0.09em;
     color: var(--accent-primary);
-    margin-block: var(--space-2) var(--space-3);
+  }
+  .intro h1 {
+    max-width: 17em;
+    margin: 0 0 var(--space-4);
+  }
+  .intro-copy {
+    max-width: 38rem;
+    margin: 0;
+    font-size: calc(1.08rem * var(--text-scale));
   }
   .intro-actions {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-3);
     flex-wrap: wrap;
+    align-items: center;
+    margin-top: var(--space-4);
   }
-  section + section {
-    margin-top: var(--space-6);
+  .statement {
+    border-left: 2px solid var(--accent-primary);
+    padding-left: var(--space-3);
+    align-self: end;
+  }
+  .statement > p:nth-child(2) {
+    font-weight: 650;
+    font-size: calc(1.08rem * var(--text-scale));
+  }
+  .statement-note {
+    color: var(--text-secondary);
+    font-size: calc(0.88rem * var(--text-scale));
+  }
+  .home-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(17rem, 0.75fr);
+    gap: clamp(2rem, 7vw, 6rem);
+    padding-block: var(--space-6);
+  }
+  .section-heading {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: var(--space-3);
+    align-items: start;
+    padding-top: var(--space-2);
+    border-top: 2px solid var(--accent-primary);
+  }
+  .section-heading > span {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    font-size: calc(0.75rem * var(--text-scale));
+  }
+  .section-heading h2 {
+    margin: 0;
+  }
+  .project-index {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+  }
+  .project-index li {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 4.5rem;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--border-default);
+  }
+  .project-index h3,
+  .project-index p {
+    margin: 0;
+  }
+  .project-index p {
+    color: var(--text-secondary);
+    margin-top: var(--space-1);
+  }
+  .item-no,
+  .status-text {
+    font-family: var(--font-mono);
+    font-size: calc(0.75rem * var(--text-scale));
+    color: var(--text-muted);
+  }
+  .status-text {
+    text-align: right;
+  }
+  .index-link {
+    margin-top: var(--space-3);
   }
   .news-list {
     list-style: none;
@@ -112,14 +213,35 @@ const structuredData = {
     padding: 0;
   }
   .news-list li {
-    display: flex;
-    gap: var(--space-3);
-    padding-block: var(--space-2);
-    border-bottom: 1px solid var(--border-default);
-    flex-wrap: wrap;
+    display: block;
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--border-default);
   }
   .news-list time {
+    display: block;
     color: var(--text-secondary);
-    min-width: 6.5em;
+    font-family: var(--font-mono);
+    font-size: calc(0.75rem * var(--text-scale));
+    margin-bottom: var(--space-1);
+  }
+  @media (max-width: 767px) {
+    .intro,
+    .home-columns {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    .intro {
+      padding-block: var(--space-4);
+    }
+    .statement {
+      max-width: 30rem;
+    }
+    .project-index li {
+      grid-template-columns: 2rem minmax(0, 1fr);
+    }
+    .status-text {
+      grid-column: 2;
+      text-align: left;
+    }
   }
 </style>

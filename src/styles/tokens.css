@@ -20,18 +20,18 @@
   --font-size-body: calc(1rem * var(--text-scale));
 
   /* 色（ライト＝紙のような白） */
-  --text-primary: #1c1c1c;
-  --text-secondary: #55524c;
-  --text-muted: #767268;
+  --text-primary: #182027;
+  --text-secondary: #56616a;
+  --text-muted: #737e86;
   --background-primary: #ffffff;
-  --background-secondary: #f6f5f2;
-  --background-inset: #efede8;
-  --border-default: #d9d6cf;
-  --border-strong: #8d897f;
+  --background-secondary: #f5f7f8;
+  --background-inset: #edf1f3;
+  --border-default: #d5dde2;
+  --border-strong: #84929c;
 
   /* アクセント（サイト別に上書き） */
-  --accent-primary: #24425f; /* 公式: 紺 */
-  --accent-hover: #16304a;
+  --accent-primary: #173f62; /* 公式: 紺 */
+  --accent-hover: #0d2f4c;
   --accent-subtle: #e8eef4;
   --on-accent: #ffffff;
 
@@ -47,9 +47,9 @@
   --space-4: 1.5rem;
   --space-5: 2.5rem;
   --space-6: 4rem;
-  --content-width: 72rem;
-  --reading-width: 42rem;
-  --radius: 4px;
+  --content-width: 76rem;
+  --reading-width: 43rem;
+  --radius: 2px;
   --touch-target: 44px;
 }
 

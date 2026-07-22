@@ -49,166 +49,290 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
 >
   <div class="container">
     <section class="atlas-intro">
-      <h1>{t(locale, "siteName")}</h1>
-      <p class="reading">
-        {
-          locale === "ja"
-            ? "「一人一人の自学自習をみんなで支える」をコンセプトに、0からの自学自習に使える、無料・広告なしの学習サイトです。記事は前提知識のつながりで結ばれており、何をどの順番で学べばよいかが分かります。"
-            : "A free, ad-free learning site designed for self-study from zero. Articles are connected by prerequisite links, so you always know what to learn next."
-        }
-      </p>
-      <div class="entry-links">
-        {
-          beginnersEntry && (
-            <a
-              class="button"
-              href={articlePath(
-                locale,
-                beginnersEntry.data.subject,
-                beginnersEntry.data.category,
-                beginnersEntry.data.slug,
-              )}
-            >
-              {t(locale, "forBeginners")}
-            </a>
-          )
-        }
-        <a class="button button-secondary" href={atlasPath(locale, "map")}>
-          {t(locale, "openMap")}
-        </a>
-        <a class="button button-secondary" href={atlasPath(locale, "search")}>
-          {t(locale, "search")}
-        </a>
-      </div>
-    </section>
-
-    <section aria-labelledby="subjects-heading">
-      <h2 id="subjects-heading">{t(locale, "subjects")}</h2>
-      <ul class="card-grid subject-grid">
-        {
-          publishedSubjects.map((s) => (
-            <li class="card">
-              <h3>
-                <a href={atlasPath(locale, s.data.slug)}>
-                  {localizedName(s.data.name, locale)}
-                </a>
-              </h3>
-              <p>{localizedName(s.data.description, locale)}</p>
-              <p>
-                <span class="badge badge-accent">{t(locale, "published")}</span>
-                <span class="badge">
-                  {t(locale, "articleCount")}:{" "}
-                  {countBySubject.get(s.data.slug) ?? 0}
-                </span>
-              </p>
-            </li>
-          ))
-        }
-      </ul>
-      <h3>{t(locale, "preparing")}</h3>
-      <ul class="preparing-list">
-        {
-          preparingSubjects.map((s) => (
-            <li>
-              <span>{localizedName(s.data.name, locale)}</span>
-              <span class="badge">{t(locale, "preparing")}</span>
-              {s.data.externalUrl && (
-                <a
-                  href={s.data.externalUrl}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {locale === "ja" ? "現行サイトで見る" : "View current site"}
-                </a>
-              )}
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-
-    <section aria-labelledby="recent-heading">
-      <h2 id="recent-heading">{t(locale, "recentArticles")}</h2>
-      <ul class="recent-list">
-        {
-          recent.map((a) => (
-            <li>
-              <time datetime={a.data.updatedAt.toISOString().slice(0, 10)}>
-                {formatDate(a.data.updatedAt, locale)}
-              </time>
+      <div class="atlas-intro-main">
+        <p class="eyebrow">OPEN STUDY INDEX / ATLASEZ</p>
+        <h1>{t(locale, "siteName")}</h1>
+        <p class="intro-copy">
+          {
+            locale === "ja"
+              ? "高校・大学で扱う知識を、前提関係と一緒に編集する学習サイトです。無料・広告なしで、知りたい項目から記事を読み、必要な前提へ戻れます。"
+              : "A free, ad-free study index that edits knowledge together with its prerequisites. Start from a topic, then trace back to what you need first."
+          }
+        </p>
+        <div class="entry-links">
+          {
+            beginnersEntry && (
               <a
+                class="button"
                 href={articlePath(
                   locale,
-                  a.data.subject,
-                  a.data.category,
-                  a.data.slug,
+                  beginnersEntry.data.subject,
+                  beginnersEntry.data.category,
+                  beginnersEntry.data.slug,
                 )}
               >
-                {a.data.title}
+                {t(locale, "forBeginners")}
               </a>
-            </li>
-          ))
-        }
-      </ul>
-      {
-        allArticles.length > articles.length && locale !== "ja" && (
-          <p class="translation-note">
-            {`Some articles are currently available only in Japanese (${allArticles.length - articles.length} more).`}
-          </p>
-        )
-      }
+            )
+          }
+          <a href={atlasPath(locale, "map")}>{t(locale, "openMap")}</a>
+          <a href={atlasPath(locale, "search")}>{t(locale, "search")}</a>
+        </div>
+      </div>
+      <aside class="atlas-note">
+        <p class="side-label">HOW TO READ</p>
+        <p>
+          {
+            locale === "ja"
+              ? "記事は単独ではなく、概念IDと前提関係で結ばれています。迷ったときは学習地図を開いてください。"
+              : "Articles are joined by concept IDs and prerequisite links. Use the learning map whenever the order is unclear."
+          }
+        </p>
+        <p class="edition">
+          {allArticles.length} ARTICLES / {publishedSubjects.length} SUBJECTS
+        </p>
+      </aside>
     </section>
+
+    <div class="atlas-columns">
+      <section aria-labelledby="subjects-heading">
+        <header class="section-heading">
+          <span>01</span>
+          <div>
+            <p>SUBJECT INDEX</p>
+            <h2 id="subjects-heading">{t(locale, "subjects")}</h2>
+          </div>
+        </header>
+        <ol class="subject-index">
+          {
+            publishedSubjects.map((s, index) => (
+              <li>
+                <span class="subject-no">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>
+                    <a href={atlasPath(locale, s.data.slug)}>
+                      {localizedName(s.data.name, locale)}
+                    </a>
+                  </h3>
+                  <p>{localizedName(s.data.description, locale)}</p>
+                </div>
+                <span class="article-count">
+                  {countBySubject.get(s.data.slug) ?? 0} {t(locale, "articles")}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <details class="preparing-subjects">
+          <summary>{t(locale, "preparing")}</summary>
+          <ul class="preparing-list details-body">
+            {
+              preparingSubjects.map((s) => (
+                <li>
+                  <span>{localizedName(s.data.name, locale)}</span>
+                  {s.data.externalUrl && (
+                    <a
+                      href={s.data.externalUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {locale === "ja" ? "現行サイト" : "Current site"}
+                    </a>
+                  )}
+                </li>
+              ))
+            }
+          </ul>
+        </details>
+      </section>
+
+      <section class="recent-panel" aria-labelledby="recent-heading">
+        <header class="section-heading">
+          <span>02</span>
+          <div>
+            <p>RECENTLY EDITED</p>
+            <h2 id="recent-heading">{t(locale, "recentArticles")}</h2>
+          </div>
+        </header>
+        <ul class="recent-list">
+          {
+            recent.map((a) => (
+              <li>
+                <time datetime={a.data.updatedAt.toISOString().slice(0, 10)}>
+                  {formatDate(a.data.updatedAt, locale)}
+                </time>
+                <a
+                  href={articlePath(
+                    locale,
+                    a.data.subject,
+                    a.data.category,
+                    a.data.slug,
+                  )}
+                >
+                  {a.data.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        {
+          allArticles.length > articles.length && locale !== "ja" && (
+            <p class="translation-note">
+              {`Some articles are currently available only in Japanese (${allArticles.length - articles.length} more).`}
+            </p>
+          )
+        }
+      </section>
+    </div>
   </div>
 </AtlasLayout>
 
 <style>
-  section + section {
-    margin-top: var(--space-6);
+  .atlas-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(15rem, 0.7fr);
+    gap: clamp(2rem, 8vw, 7rem);
+    padding-block: clamp(2rem, 7vw, 5rem);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .eyebrow,
+  .side-label,
+  .section-heading p,
+  .edition {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: calc(0.72rem * var(--text-scale));
+    letter-spacing: 0.08em;
+    color: var(--accent-primary);
+  }
+  .atlas-intro h1 {
+    margin: 0 0 var(--space-3);
+  }
+  .intro-copy {
+    max-width: 39rem;
+    margin: 0;
+    font-size: calc(1.08rem * var(--text-scale));
   }
   .entry-links {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-3);
     flex-wrap: wrap;
+    align-items: center;
+    margin-top: var(--space-4);
   }
-  .subject-grid h3 {
+  .atlas-note {
+    align-self: end;
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--accent-primary);
+    color: var(--text-secondary);
+    font-size: calc(0.9rem * var(--text-scale));
+  }
+  .edition {
+    margin-top: var(--space-4);
+  }
+  .atlas-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1.75fr) minmax(17rem, 0.7fr);
+    gap: clamp(2rem, 7vw, 6rem);
+    padding-block: var(--space-6);
+  }
+  .section-heading {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: var(--space-3);
+    border-top: 2px solid var(--accent-primary);
+    padding-top: var(--space-2);
+  }
+  .section-heading > span,
+  .subject-no,
+  .article-count {
+    font-family: var(--font-mono);
+    font-size: calc(0.75rem * var(--text-scale));
+    color: var(--text-muted);
+  }
+  .section-heading h2,
+  .subject-index h3,
+  .subject-index p {
     margin: 0;
+  }
+  .subject-index {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0;
+  }
+  .subject-index li {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 7rem;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--border-default);
+  }
+  .subject-index h3 {
+    font-size: calc(1.12rem * var(--text-scale));
+  }
+  .subject-index p {
+    margin-top: var(--space-1);
+    color: var(--text-secondary);
+  }
+  .article-count {
+    text-align: right;
+  }
+  .preparing-subjects {
+    margin-top: var(--space-4);
   }
   .preparing-list {
     list-style: none;
     margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    gap: var(--space-2);
+    columns: 2;
   }
   .preparing-list li {
     display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    flex-wrap: wrap;
-    padding: var(--space-2);
-    border: 1px dashed var(--border-default);
-    border-radius: var(--radius);
+    justify-content: space-between;
+    gap: var(--space-3);
+    break-inside: avoid;
+    padding: var(--space-1) 0;
     color: var(--text-secondary);
   }
   .recent-list {
     list-style: none;
-    margin: 0;
+    margin: var(--space-4) 0 0;
     padding: 0;
   }
   .recent-list li {
-    display: flex;
-    gap: var(--space-3);
-    padding-block: var(--space-2);
-    border-bottom: 1px solid var(--border-default);
-    flex-wrap: wrap;
+    display: block;
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--border-default);
   }
   .recent-list time {
+    display: block;
     color: var(--text-secondary);
-    min-width: 6.5em;
+    font-family: var(--font-mono);
+    font-size: calc(0.75rem * var(--text-scale));
+    margin-bottom: var(--space-1);
   }
   .translation-note {
     color: var(--text-secondary);
     font-size: calc(0.9rem * var(--text-scale));
+  }
+  @media (max-width: 767px) {
+    .atlas-intro,
+    .atlas-columns {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    .atlas-intro {
+      padding-block: var(--space-4);
+    }
+    .subject-index li {
+      grid-template-columns: 2rem minmax(0, 1fr);
+    }
+    .article-count {
+      grid-column: 2;
+      text-align: left;
+    }
+    .preparing-list {
+      columns: 1;
+    }
   }
 </style>

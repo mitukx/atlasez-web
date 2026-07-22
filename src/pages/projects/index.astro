@@ -29,24 +29,25 @@ const statusLabel = {
     <p class="reading">
       Atlasezは複数のプロジェクトを並行して運営しています。それぞれのページで、活動内容と参加方法を紹介しています。
     </p>
-    <ul class="card-grid">
+    <ol class="project-list">
       {
-        projects.map((p) => (
-          <li class="card">
-            <h2 class="project-name">
-              <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
-            </h2>
-            <p>{p.data.shortDescription}</p>
+        projects.map((p, index) => (
+          <li>
+            <span class="project-no">{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <h2 class="project-name">
+                <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
+              </h2>
+              <p>{p.data.shortDescription}</p>
+            </div>
             <p class="project-meta">
-              <span class="badge badge-accent">
-                {statusLabel[p.data.status]}
-              </span>
-              <span class="badge">開始: {p.data.startedAt}</span>
+              <span>{statusLabel[p.data.status]}</span>
+              <span>{p.data.startedAt}–</span>
             </p>
           </li>
         ))
       }
-    </ul>
+    </ol>
   </div>
 </OrgLayout>
 
@@ -55,10 +56,44 @@ const statusLabel = {
     font-size: calc(1.15rem * var(--text-scale));
     margin: 0;
   }
+  .project-list {
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    max-width: 58rem;
+    border-top: 2px solid var(--accent-primary);
+  }
+  .project-list li {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) 7rem;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .project-list li p {
+    margin: var(--space-1) 0 0;
+  }
+  .project-no,
+  .project-meta {
+    font-family: var(--font-mono);
+    font-size: calc(0.75rem * var(--text-scale));
+    color: var(--text-muted);
+  }
   .project-meta {
     display: flex;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-    margin-top: auto;
+    flex-direction: column;
+    gap: var(--space-1);
+    text-align: right;
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .project-list li {
+      grid-template-columns: 2rem minmax(0, 1fr);
+    }
+    .project-meta {
+      grid-column: 2;
+      flex-direction: row;
+      text-align: left;
+    }
   }
 </style>

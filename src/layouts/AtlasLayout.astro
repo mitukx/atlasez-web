@@ -135,6 +135,7 @@ const currentPath = Astro.url.pathname;
 
 <style>
   .atlas-header {
+    border-top: 3px solid var(--accent-primary);
     border-bottom: 1px solid var(--border-default);
     background: var(--background-primary);
   }
@@ -154,6 +155,7 @@ const currentPath = Astro.url.pathname;
     color: var(--accent-primary);
     text-decoration: none;
     min-height: var(--touch-target);
+    letter-spacing: 0.035em;
   }
   .atlas-nav {
     display: flex;
@@ -170,7 +172,7 @@ const currentPath = Astro.url.pathname;
     padding: 0 var(--space-2);
     text-decoration: none;
     color: var(--text-primary);
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
   }
   .atlas-nav a:hover,
   .atlas-nav a[aria-current="page"] {
@@ -209,7 +211,7 @@ const currentPath = Astro.url.pathname;
   }
   .atlas-footer {
     border-top: 1px solid var(--border-default);
-    background: var(--background-secondary);
+    background: var(--background-primary);
     padding-block: var(--space-5);
     font-size: calc(0.9rem * var(--text-scale));
   }
@@ -229,6 +231,18 @@ const currentPath = Astro.url.pathname;
   @media (max-width: 767px) {
     .lang-switch {
       margin-left: 0;
+    }
+    .atlas-header-inner > nav:first-of-type {
+      order: 2;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .atlas-nav {
+      flex-wrap: nowrap;
+      width: max-content;
+    }
+    .org-link {
+      display: none;
     }
   }
 </style>

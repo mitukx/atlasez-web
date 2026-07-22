@@ -409,6 +409,13 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
   .toc-depth-3 a {
     padding-left: var(--space-4);
   }
+  .article-header {
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--accent-primary);
+  }
+  .article-header h1 {
+    margin-bottom: var(--space-2);
+  }
   .article-summary {
     color: var(--text-secondary);
     font-size: calc(1.05rem * var(--text-scale));
@@ -450,9 +457,10 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
     gap: var(--space-3);
   }
   .article-aside section {
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius);
-    padding: var(--space-3);
+    border: 0;
+    border-top: 2px solid var(--accent-primary);
+    border-radius: 0;
+    padding: var(--space-2) 0 var(--space-3);
   }
   .article-aside h2 {
     font-size: calc(0.95rem * var(--text-scale));

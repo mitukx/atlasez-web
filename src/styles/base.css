@@ -17,6 +17,7 @@ body {
   background: var(--background-primary);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
+  font-feature-settings: "palt" 1;
 }
 
 /* リンク: 色だけに依存せず下線を維持 */
@@ -54,14 +55,17 @@ h1,
 h2,
 h3,
 h4 {
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--text-primary);
+  letter-spacing: 0.01em;
 }
 h1 {
-  font-size: calc(1.7rem * var(--text-scale));
+  font-size: calc(1.85rem * var(--text-scale));
+  font-weight: 650;
 }
 h2 {
-  font-size: calc(1.35rem * var(--text-scale));
+  font-size: calc(1.3rem * var(--text-scale));
+  font-weight: 650;
 }
 h3 {
   font-size: calc(1.15rem * var(--text-scale));
@@ -91,7 +95,8 @@ table {
 }
 th,
 td {
-  border: 1px solid var(--border-default);
+  border: 0;
+  border-bottom: 1px solid var(--border-default);
   padding: var(--space-2) var(--space-3);
   text-align: left;
 }
@@ -134,7 +139,7 @@ button.button {
   min-height: var(--touch-target);
   padding: 0.5em 1.2em;
   border: 1px solid var(--accent-primary);
-  border-radius: var(--radius);
+  border-radius: 0;
   background: var(--accent-primary);
   color: var(--on-accent);
   font: inherit;
@@ -159,7 +164,7 @@ button.button {
   display: inline-block;
   padding: 0.1em 0.6em;
   border: 1px solid var(--border-strong);
-  border-radius: 999px;
+  border-radius: 0;
   font-size: calc(0.8rem * var(--text-scale));
   color: var(--text-secondary);
   background: var(--background-secondary);
@@ -191,16 +196,18 @@ button.button {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-4);
   padding: 0;
   margin: var(--space-3) 0;
   list-style: none;
 }
 .card {
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius);
-  padding: var(--space-3);
-  background: var(--background-primary);
+  border: 0;
+  border-top: 2px solid var(--accent-primary);
+  border-bottom: 1px solid var(--border-default);
+  border-radius: 0;
+  padding: var(--space-3) 0 var(--space-4);
+  background: transparent;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -222,7 +229,7 @@ textarea {
   color: var(--text-primary);
   background: var(--background-primary);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
+  border-radius: 0;
   padding: 0.4em 0.6em;
   min-height: var(--touch-target);
   max-width: 100%;
@@ -230,8 +237,10 @@ textarea {
 
 /* 詳細折り畳み */
 details {
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius);
+  border: 0;
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+  border-radius: 0;
 }
 details summary {
   cursor: pointer;
