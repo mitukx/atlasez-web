@@ -4,18 +4,18 @@ import AxeBuilder from "@axe-core/playwright";
 /** axe-coreによる自動アクセシビリティ検査（WCAG 2.2 AA目標） */
 
 const pages = [
-  "/",
-  "/about/",
-  "/projects/",
-  "/news/",
-  "/join/",
-  "/atlas/ja/",
-  "/atlas/ja/mathematics/",
-  "/atlas/ja/mathematics/set-theory/",
-  "/atlas/ja/mathematics/group-theory/group-definition/",
-  "/atlas/ja/map/",
-  "/atlas/ja/search/",
-  "/atlas/en/",
+  "./",
+  "about/",
+  "projects/",
+  "news/",
+  "join/",
+  "atlas/ja/",
+  "atlas/ja/mathematics/",
+  "atlas/ja/mathematics/set-theory/",
+  "atlas/ja/mathematics/group-theory/group-definition/",
+  "atlas/ja/map/",
+  "atlas/ja/search/",
+  "atlas/en/",
 ];
 
 for (const path of pages) {
