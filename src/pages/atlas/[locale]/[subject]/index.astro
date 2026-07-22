@@ -1,0 +1,162 @@
+---
+/**
+ * 分野ホーム（標準UI: 折り畳みセクション＝design-lab案Aを採用。
+ * 採用理由は docs/DESIGN_DECISIONS.md 参照）
+ */
+import AtlasLayout from "../../../../layouts/AtlasLayout.astro";
+import Breadcrumb from "../../../../components/Breadcrumb.astro";
+import { atlasPath, articlePath } from "../../../../lib/site";
+import {
+  t,
+  LOCALES,
+  localizedName,
+  difficultyLabel,
+  type Locale,
+} from "../../../../lib/i18n";
+import {
+  getPublishedArticles,
+  getPublishedSubjects,
+} from "../../../../lib/content";
+
+export async function getStaticPaths() {
+  const subjects = (await getPublishedSubjects()).filter(
+    (s) => s.data.status === "published",
+  );
+  return LOCALES.flatMap((locale) =>
+    subjects.map((s) => ({
+      params: { locale, subject: s.data.slug },
+      props: { subject: s },
+    })),
+  );
+}
+
+const locale = Astro.params.locale as Locale;
+const { subject } = Astro.props;
+const articles = await getPublishedArticles(locale);
+const subjectArticles = articles.filter(
+  (a) => a.data.subject === subject.data.slug,
+);
+const categories = [...subject.data.categories].sort(
+  (a, b) => a.order - b.order,
+);
+
+const alternates = LOCALES.map((l) => ({
+  hreflang: l,
+  href: new URL(atlasPath(l, subject.data.slug), Astro.site).href,
+}));
+const subjectName = localizedName(subject.data.name, locale);
+---
+
+<AtlasLayout
+  locale={locale}
+  title={subjectName}
+  description={localizedName(subject.data.description, locale)}
+  alternates={alternates}
+  localeSwitchHrefs={Object.fromEntries(
+    LOCALES.map((l) => [l, atlasPath(l, subject.data.slug)]),
+  )}
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: t(locale, "breadcrumbHome"), href: atlasPath(locale) },
+        { label: subjectName },
+      ]}
+    />
+    <h1>{subjectName}</h1>
+    <p class="reading">{localizedName(subject.data.description, locale)}</p>
+    <p>
+      <a class="button button-secondary" href={atlasPath(locale, "map")}>
+        {t(locale, "openMap")}
+      </a>
+    </p>
+
+    <h2 class="visually-hidden">{t(locale, "category")}</h2>
+    <div class="category-sections">
+      {
+        categories.map((cat, i) => {
+          const catArticles = subjectArticles.filter(
+            (a) => a.data.category === cat.slug,
+          );
+          return (
+            <details open={i === 0}>
+              <summary>
+                <span class="cat-name">{localizedName(cat.name, locale)}</span>
+                <span class="badge">
+                  {t(locale, "articles")}: {catArticles.length}
+                </span>
+              </summary>
+              <div class="details-body">
+                <p>{localizedName(cat.description, locale)}</p>
+                {catArticles.length > 0 ? (
+                  <>
+                    <ul class="cat-article-list">
+                      {catArticles.slice(0, 8).map((a) => (
+                        <li>
+                          <a
+                            href={articlePath(
+                              locale,
+                              a.data.subject,
+                              a.data.category,
+                              a.data.slug,
+                            )}
+                          >
+                            {a.data.title}
+                          </a>
+                          <span class="badge">
+                            {difficultyLabel(locale, a.data.difficulty)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p>
+                      <a
+                        href={atlasPath(locale, subject.data.slug, cat.slug)}
+                      >
+                        {locale === "ja"
+                          ? `${localizedName(cat.name, locale)}の記事一覧 ›`
+                          : `All articles in ${localizedName(cat.name, locale)} ›`}
+                      </a>
+                    </p>
+                  </>
+                ) : (
+                  <p>
+                    <span class="badge">{t(locale, "preparing")}</span>
+                  </p>
+                )}
+              </div>
+            </details>
+          );
+        })
+      }
+    </div>
+  </div>
+</AtlasLayout>
+
+<style>
+  .category-sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: var(--content-width);
+    margin-top: var(--space-4);
+  }
+  .cat-name {
+    flex: 1;
+  }
+  .cat-article-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-2);
+  }
+  .cat-article-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    align-items: baseline;
+    padding: var(--space-1) 0;
+  }
+</style>

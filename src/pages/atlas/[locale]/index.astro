@@ -1,0 +1,214 @@
+---
+import AtlasLayout from "../../../layouts/AtlasLayout.astro";
+import { atlasPath, articlePath, formatDate } from "../../../lib/site";
+import { t, LOCALES, localizedName, type Locale } from "../../../lib/i18n";
+import {
+  getPublishedArticles,
+  getPublishedSubjects,
+} from "../../../lib/content";
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const subjects = await getPublishedSubjects();
+const articles = await getPublishedArticles(locale);
+const allArticles = await getPublishedArticles();
+
+const countBySubject = new Map<string, number>();
+for (const a of articles) {
+  countBySubject.set(
+    a.data.subject,
+    (countBySubject.get(a.data.subject) ?? 0) + 1,
+  );
+}
+
+const recent = [...articles]
+  .sort((a, b) => b.data.updatedAt.getTime() - a.data.updatedAt.getTime())
+  .slice(0, 5);
+
+const beginnersEntry = articles.find((a) =>
+  a.data.concepts.some((c) => c.id === "math.set-theory.sets"),
+);
+
+const alternates = LOCALES.map((l) => ({
+  hreflang: l,
+  href: new URL(atlasPath(l), Astro.site).href,
+}));
+
+const publishedSubjects = subjects.filter((s) => s.data.status === "published");
+const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
+---
+
+<AtlasLayout
+  locale={locale}
+  title={locale === "ja" ? "総合ホーム" : "Home"}
+  description={t(locale, "siteTagline")}
+  alternates={alternates}
+>
+  <div class="container">
+    <section class="atlas-intro">
+      <h1>{t(locale, "siteName")}</h1>
+      <p class="reading">
+        {
+          locale === "ja"
+            ? "「一人一人の自学自習をみんなで支える」をコンセプトに、0からの自学自習に使える、無料・広告なしの学習サイトです。記事は前提知識のつながりで結ばれており、何をどの順番で学べばよいかが分かります。"
+            : "A free, ad-free learning site designed for self-study from zero. Articles are connected by prerequisite links, so you always know what to learn next."
+        }
+      </p>
+      <div class="entry-links">
+        {
+          beginnersEntry && (
+            <a
+              class="button"
+              href={articlePath(
+                locale,
+                beginnersEntry.data.subject,
+                beginnersEntry.data.category,
+                beginnersEntry.data.slug,
+              )}
+            >
+              {t(locale, "forBeginners")}
+            </a>
+          )
+        }
+        <a class="button button-secondary" href={atlasPath(locale, "map")}>
+          {t(locale, "openMap")}
+        </a>
+        <a class="button button-secondary" href={atlasPath(locale, "search")}>
+          {t(locale, "search")}
+        </a>
+      </div>
+    </section>
+
+    <section aria-labelledby="subjects-heading">
+      <h2 id="subjects-heading">{t(locale, "subjects")}</h2>
+      <ul class="card-grid subject-grid">
+        {
+          publishedSubjects.map((s) => (
+            <li class="card">
+              <h3>
+                <a href={atlasPath(locale, s.data.slug)}>
+                  {localizedName(s.data.name, locale)}
+                </a>
+              </h3>
+              <p>{localizedName(s.data.description, locale)}</p>
+              <p>
+                <span class="badge badge-accent">{t(locale, "published")}</span>
+                <span class="badge">
+                  {t(locale, "articleCount")}:{" "}
+                  {countBySubject.get(s.data.slug) ?? 0}
+                </span>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <h3>{t(locale, "preparing")}</h3>
+      <ul class="preparing-list">
+        {
+          preparingSubjects.map((s) => (
+            <li>
+              <span>{localizedName(s.data.name, locale)}</span>
+              <span class="badge">{t(locale, "preparing")}</span>
+              {s.data.externalUrl && (
+                <a
+                  href={s.data.externalUrl}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {locale === "ja" ? "現行サイトで見る" : "View current site"}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section aria-labelledby="recent-heading">
+      <h2 id="recent-heading">{t(locale, "recentArticles")}</h2>
+      <ul class="recent-list">
+        {
+          recent.map((a) => (
+            <li>
+              <time datetime={a.data.updatedAt.toISOString().slice(0, 10)}>
+                {formatDate(a.data.updatedAt, locale)}
+              </time>
+              <a
+                href={articlePath(
+                  locale,
+                  a.data.subject,
+                  a.data.category,
+                  a.data.slug,
+                )}
+              >
+                {a.data.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        allArticles.length > articles.length && locale !== "ja" && (
+          <p class="translation-note">
+            {`Some articles are currently available only in Japanese (${allArticles.length - articles.length} more).`}
+          </p>
+        )
+      }
+    </section>
+  </div>
+</AtlasLayout>
+
+<style>
+  section + section {
+    margin-top: var(--space-6);
+  }
+  .entry-links {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .subject-grid h3 {
+    margin: 0;
+  }
+  .preparing-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: var(--space-2);
+  }
+  .preparing-list li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    flex-wrap: wrap;
+    padding: var(--space-2);
+    border: 1px dashed var(--border-default);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+  }
+  .recent-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .recent-list li {
+    display: flex;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--border-default);
+    flex-wrap: wrap;
+  }
+  .recent-list time {
+    color: var(--text-secondary);
+    min-width: 6.5em;
+  }
+  .translation-note {
+    color: var(--text-secondary);
+    font-size: calc(0.9rem * var(--text-scale));
+  }
+</style>

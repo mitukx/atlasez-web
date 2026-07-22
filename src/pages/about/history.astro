@@ -1,0 +1,53 @@
+---
+import OrgLayout from "../../layouts/OrgLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { withBase } from "../../lib/site";
+
+const history = [
+  { date: "2022年9月", event: "Atlasez設立、ホームページ開設" },
+  { date: "2023年1月〜6月", event: "「考えるカフェ」第1回〜第4回を開催" },
+  { date: "2023年10月", event: "「第1回 みんなでつくる生徒会交流会」を開催" },
+  { date: "2024年5月", event: "ゼミプラットフォームのサイトを公開" },
+  {
+    date: "2024年7月〜",
+    event: "学習サイト「アトラス」を分野ごとに順次公開（漢字・古文・化学・物理…）",
+  },
+  { date: "2025年4月", event: "学習サイト「アトラス」総合ページを公開" },
+  { date: "2026年7月", event: "新公式サイト・新学習サイトのベータ版を公開" },
+];
+---
+
+<OrgLayout title="沿革" description="Atlasezの設立からこれまでの歩み。">
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "Atlasezとは", href: withBase("/about/") },
+        { label: "沿革" },
+      ]}
+    />
+    <h1>沿革</h1>
+    <table class="history">
+      <caption class="visually-hidden">Atlasezの沿革</caption>
+      <thead>
+        <tr><th scope="col">時期</th><th scope="col">出来事</th></tr>
+      </thead>
+      <tbody>
+        {
+          history.map((h) => (
+            <tr>
+              <th scope="row">{h.date}</th>
+              <td>{h.event}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</OrgLayout>
+
+<style>
+  .history {
+    max-width: var(--reading-width);
+  }
+</style>

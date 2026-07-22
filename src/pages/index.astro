@@ -1,0 +1,125 @@
+---
+import OrgLayout from "../layouts/OrgLayout.astro";
+import { getCollection } from "astro:content";
+import { withBase, ORG, formatDate } from "../lib/site";
+
+const news = (await getCollection("news", (n) => n.data.status === "published"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+const projects = (await getCollection("projects"))
+  .filter((p) => p.data.status !== "archived")
+  .sort((a, b) => a.data.order - b.data.order);
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Atlasez",
+  url: Astro.site?.href,
+  email: ORG.email,
+  slogan: ORG.philosophy,
+};
+---
+
+<OrgLayout
+  title="ホーム"
+  description="Atlasezは「未来の学びを創る。学びで未来を創る。」を理念に、学習サイト「アトラス」などを運営する学生団体です。"
+  structuredData={structuredData}
+>
+  <div class="container">
+    <section class="intro" aria-labelledby="intro-heading">
+      <h1 id="intro-heading">Atlasez</h1>
+      <p class="philosophy">{ORG.philosophy}</p>
+      <p class="reading">
+        Atlasezは、学生が中心となって「学び」を支える活動に取り組む団体です。
+        無料・広告なしの学習サイト「アトラス」の運営を中心に、
+        ゼミプラットフォームや対話イベントなど、学びをめぐる複数のプロジェクトを進めています。
+      </p>
+      <p class="intro-actions">
+        <a class="button" href={withBase("/about/")}>Atlasezとは</a>
+        <a class="button button-secondary" href={withBase("/join/")}
+          >運営に参加する</a
+        >
+        <a class="button button-secondary" href={withBase("/contact/")}
+          >お問い合わせ</a
+        >
+      </p>
+    </section>
+
+    <section aria-labelledby="projects-heading">
+      <h2 id="projects-heading">主要プロジェクト</h2>
+      <ul class="card-grid">
+        {
+          projects.map((p) => (
+            <li class="card">
+              <h3>
+                <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
+              </h3>
+              <p>{p.data.shortDescription}</p>
+              <p>
+                <span class="badge badge-accent">
+                  {p.data.status === "active" ? "活動中" : "準備中"}
+                </span>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <p><a href={withBase("/projects/")}>プロジェクト一覧 ›</a></p>
+    </section>
+
+    <section aria-labelledby="news-heading">
+      <h2 id="news-heading">最新のお知らせ</h2>
+      <ul class="news-list">
+        {
+          news.map((n) => (
+            <li>
+              <time datetime={n.data.date.toISOString().slice(0, 10)}>
+                {formatDate(n.data.date)}
+              </time>
+              <a href={withBase(`/news/${n.id.replace(/\.md$/, "")}/`)}>
+                {n.data.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p><a href={withBase("/news/")}>お知らせ一覧 ›</a></p>
+    </section>
+  </div>
+</OrgLayout>
+
+<style>
+  .intro {
+    max-width: var(--reading-width);
+  }
+  .philosophy {
+    font-size: calc(1.3rem * var(--text-scale));
+    font-weight: 700;
+    color: var(--accent-primary);
+    margin-block: var(--space-2) var(--space-3);
+  }
+  .intro-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  section + section {
+    margin-top: var(--space-6);
+  }
+  .news-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .news-list li {
+    display: flex;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+    border-bottom: 1px solid var(--border-default);
+    flex-wrap: wrap;
+  }
+  .news-list time {
+    color: var(--text-secondary);
+    min-width: 6.5em;
+  }
+</style>

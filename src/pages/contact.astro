@@ -1,0 +1,63 @@
+---
+import OrgLayout from "../layouts/OrgLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { withBase, ORG } from "../lib/site";
+---
+
+<OrgLayout
+  title="お問い合わせ"
+  description="Atlasezへのお問い合わせ方法。メール・SNSでご連絡いただけます。"
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "お問い合わせ" },
+      ]}
+    />
+    <h1>お問い合わせ</h1>
+    <div class="reading">
+      <p>
+        Atlasezへのお問い合わせは、メールまたはSNSのダイレクトメッセージで受け付けています。
+      </p>
+      <h2>メール</h2>
+      <p>
+        <a href={`mailto:${ORG.email}`}>{ORG.email}</a>
+      </p>
+      <h2>SNS</h2>
+      <ul>
+        <li>
+          <a href={ORG.sns.x} rel="noopener noreferrer" target="_blank"
+            >X (@atlasez_info)</a
+          >
+        </li>
+        <li>
+          <a href={ORG.sns.instagram} rel="noopener noreferrer" target="_blank"
+            >Instagram (@atlasez_info)</a
+          >
+        </li>
+        <li>
+          <a href={ORG.sns.line} rel="noopener noreferrer" target="_blank"
+            >LINE公式アカウント</a
+          >
+        </li>
+      </ul>
+      <h2>学習サイトの記事について</h2>
+      <p>
+        学習サイト「アトラス」の記事の誤りは、各記事ページの「問題を報告」リンク（GitHub
+        Issue）からも報告できます。
+      </p>
+      <p class="note">
+        ※
+        お問い合わせフォームの設置は今後検討します（スパム対策の検討が必要なため。docs/ASSUMPTIONS.md参照）。
+      </p>
+    </div>
+  </div>
+</OrgLayout>
+
+<style>
+  .note {
+    color: var(--text-secondary);
+    font-size: calc(0.85rem * var(--text-scale));
+  }
+</style>

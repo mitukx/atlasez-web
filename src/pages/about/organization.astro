@@ -1,0 +1,63 @@
+---
+import OrgLayout from "../../layouts/OrgLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { withBase } from "../../lib/site";
+
+const teams = [
+  {
+    name: "学習サイト運営",
+    desc: "学習サイト「アトラス」の記事執筆・査読・翻訳・サイト運営",
+  },
+  { name: "イベント運営", desc: "考えるカフェ・交流会などの企画運営" },
+  { name: "広報", desc: "SNS運用・お知らせの発信" },
+  { name: "開発", desc: "Webサイト・ツールの開発と保守" },
+];
+---
+
+<OrgLayout
+  title="組織構成"
+  description="Atlasezの組織構成とチームの役割分担について。"
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "Atlasezとは", href: withBase("/about/") },
+        { label: "組織構成" },
+      ]}
+    />
+    <h1>組織構成</h1>
+    <p class="reading">
+      Atlasezはプロジェクトごとのチームで活動しています。複数チームの兼任も可能です。
+    </p>
+    <table>
+      <caption class="visually-hidden">チームと役割の一覧</caption>
+      <thead>
+        <tr><th scope="col">チーム</th><th scope="col">役割</th></tr>
+      </thead>
+      <tbody>
+        {
+          teams.map((t) => (
+            <tr>
+              <th scope="row">{t.name}</th>
+              <td>{t.desc}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p class="note reading">
+      ※ 本ページの内容は移行用の下書きです。正式な組織図は現行サイトから移行してください。
+    </p>
+  </div>
+</OrgLayout>
+
+<style>
+  .note {
+    color: var(--text-secondary);
+    font-size: calc(0.85rem * var(--text-scale));
+  }
+  table {
+    max-width: var(--reading-width);
+  }
+</style>

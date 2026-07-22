@@ -1,0 +1,72 @@
+---
+import OrgLayout from "../../layouts/OrgLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { withBase, ORG } from "../../lib/site";
+
+const sections = [
+  {
+    href: withBase("/about/philosophy/"),
+    title: "理念・目標",
+    desc: "Atlasezが目指すもの",
+  },
+  {
+    href: withBase("/about/organization/"),
+    title: "組織構成",
+    desc: "チームと役割分担",
+  },
+  {
+    href: withBase("/about/members/"),
+    title: "運営メンバー",
+    desc: "運営に携わるメンバーの紹介",
+  },
+  {
+    href: withBase("/about/history/"),
+    title: "沿革",
+    desc: "設立からこれまでの歩み",
+  },
+];
+---
+
+<OrgLayout
+  title="Atlasezとは"
+  description="学生団体Atlasezの概要。理念・組織構成・運営メンバー・沿革を紹介します。"
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "Atlasezとは" },
+      ]}
+    />
+    <h1>Atlasezとは</h1>
+    <div class="reading">
+      <p>
+        Atlasezは「{ORG.philosophy}」を理念とする学生団体です。
+        学ぶ人が経済的な事情や環境に左右されずに学べる仕組みをつくることを目指し、
+        学習サイトの運営・対話イベント・ゼミ活動などに取り組んでいます。
+      </p>
+      <p>
+        名前の由来は、学びの「地図帳（Atlas）」をみんな（-ez）でつくるという思いにあります。
+      </p>
+    </div>
+    <ul class="card-grid">
+      {
+        sections.map((s) => (
+          <li class="card">
+            <h2 class="card-title">
+              <a href={s.href}>{s.title}</a>
+            </h2>
+            <p>{s.desc}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</OrgLayout>
+
+<style>
+  .card-title {
+    font-size: calc(1.15rem * var(--text-scale));
+    margin: 0;
+  }
+</style>

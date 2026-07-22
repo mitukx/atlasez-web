@@ -1,0 +1,64 @@
+---
+import OrgLayout from "../../layouts/OrgLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { getCollection } from "astro:content";
+import { withBase } from "../../lib/site";
+
+const projects = (await getCollection("projects")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const statusLabel = {
+  active: "活動中",
+  preparing: "準備中",
+  archived: "終了・休止中",
+} as const;
+---
+
+<OrgLayout
+  title="プロジェクト一覧"
+  description="Atlasezが運営するプロジェクトの一覧。学習サイト「アトラス」、ゼミプラットフォーム、考えるカフェなど。"
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "プロジェクト" },
+      ]}
+    />
+    <h1>プロジェクト一覧</h1>
+    <p class="reading">
+      Atlasezは複数のプロジェクトを並行して運営しています。それぞれのページで、活動内容と参加方法を紹介しています。
+    </p>
+    <ul class="card-grid">
+      {
+        projects.map((p) => (
+          <li class="card">
+            <h2 class="project-name">
+              <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
+            </h2>
+            <p>{p.data.shortDescription}</p>
+            <p class="project-meta">
+              <span class="badge badge-accent">
+                {statusLabel[p.data.status]}
+              </span>
+              <span class="badge">開始: {p.data.startedAt}</span>
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</OrgLayout>
+
+<style>
+  .project-name {
+    font-size: calc(1.15rem * var(--text-scale));
+    margin: 0;
+  }
+  .project-meta {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+</style>

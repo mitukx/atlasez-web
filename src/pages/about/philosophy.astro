@@ -1,0 +1,52 @@
+---
+import OrgLayout from "../../layouts/OrgLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { withBase, ORG } from "../../lib/site";
+---
+
+<OrgLayout
+  title="理念・目標"
+  description="Atlasezの理念「未来の学びを創る。学びで未来を創る。」と活動目標について。"
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "Atlasezとは", href: withBase("/about/") },
+        { label: "理念・目標" },
+      ]}
+    />
+    <h1>理念・目標</h1>
+    <div class="reading">
+      <h2>理念</h2>
+      <p class="philosophy-statement">{ORG.philosophy}</p>
+      <p>
+        学びの形は時代とともに変わり続けています。私たちは、これからの時代に合った
+        新しい学びの形を自分たちの手で創り出すこと（未来の学びを創る）、
+        そして学びを通じて一人一人がより良い未来を切り拓けるようにすること
+        （学びで未来を創る）の両方を大切にしています。
+      </p>
+      <h2>目標</h2>
+      <ul>
+        <li>0からの自学自習に使える、無料・広告なしの学習環境を提供する</li>
+        <li>学ぶ人同士・教える人同士が支え合えるコミュニティを育てる</li>
+        <li>学生が主体となって学びの仕組みそのものを企画・運営する経験の場をつくる</li>
+      </ul>
+      <p class="note">
+        ※ 本ページの文章は移行用の下書きです。正式な文面は現行サイトから移行してください（docs/MIGRATION_PLAN.md参照）。
+      </p>
+    </div>
+  </div>
+</OrgLayout>
+
+<style>
+  .philosophy-statement {
+    font-size: calc(1.3rem * var(--text-scale));
+    font-weight: 700;
+    color: var(--accent-primary);
+  }
+  .note {
+    color: var(--text-secondary);
+    font-size: calc(0.85rem * var(--text-scale));
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+import OrgLayout from "../../layouts/OrgLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { withBase } from "../../lib/site";
+
+// メンバーはデータ追加だけで掲載できる
+const members = [
+  { name: "サンプル代表", role: "代表", comment: "学びの地図を一緒につくりましょう。" },
+  { name: "サンプル副代表", role: "副代表・学習サイト運営", comment: "数学記事を担当しています。" },
+  { name: "サンプルメンバー", role: "広報", comment: "SNSで活動を発信しています。" },
+];
+---
+
+<OrgLayout
+  title="運営メンバー"
+  description="Atlasezの運営メンバー紹介。"
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "ホーム", href: withBase("/") },
+        { label: "Atlasezとは", href: withBase("/about/") },
+        { label: "運営メンバー" },
+      ]}
+    />
+    <h1>運営メンバー</h1>
+    <ul class="card-grid">
+      {
+        members.map((m) => (
+          <li class="card">
+            <h2 class="member-name">{m.name}</h2>
+            <p class="member-role">{m.role}</p>
+            <p>{m.comment}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="note reading">
+      ※ サンプルデータです。実メンバーの情報は本人の同意を得たうえで移行してください。
+    </p>
+  </div>
+</OrgLayout>
+
+<style>
+  .member-name {
+    font-size: calc(1.1rem * var(--text-scale));
+    margin: 0;
+  }
+  .member-role {
+    color: var(--accent-primary);
+    font-weight: 600;
+    margin: 0;
+  }
+  .note {
+    color: var(--text-secondary);
+    font-size: calc(0.85rem * var(--text-scale));
+  }
+</style>
