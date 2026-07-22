@@ -25,68 +25,55 @@ const structuredData = {
   description="Atlasezは「未来の学びを創る。学びで未来を創る。」を理念に、学習サイト「アトラス」などを運営する学生団体です。"
   structuredData={structuredData}
 >
-  <div class="container">
-    <section class="intro" aria-labelledby="intro-heading">
-      <div class="intro-main">
-        <p class="eyebrow">STUDENT COLLECTIVE / SINCE 2022</p>
-        <h1 id="intro-heading">学びをつくる学生団体、Atlasez。</h1>
-        <p class="intro-copy">
-          学生が中心となり、無料・広告なしの学習サイト「アトラス」を編集しています。
-          ゼミの運営基盤や対話イベントも含め、学ぶ人同士が知識を持ち寄れる場所をつくります。
+  <div class="container home">
+    <section class="lead" aria-labelledby="lead-heading">
+      <div>
+        <h1 id="lead-heading">学生の手で、学ぶ場所をつくっています。</h1>
+        <p class="lead-copy">
+          Atlasezは、無料・広告なしの学習サイト「アトラス」を編集する学生団体です。
+          記事を書くこと、ゼミや対話の場を運営することを通して、学ぶ人自身が知識づくりに参加できる環境を整えています。
         </p>
-        <p class="intro-actions">
-          <a class="button" href={withBase("/about/")}>団体について読む</a>
+        <div class="lead-links">
+          <a class="button" href={withBase("/atlas/ja/")}>学習サイトを見る</a>
+          <a href={withBase("/about/")}>Atlasezについて</a>
           <a href={withBase("/join/")}>運営に参加する</a>
-          <a href={withBase("/contact/")}>連絡する</a>
-        </p>
+        </div>
       </div>
-      <aside class="statement" aria-label="Atlasezの理念">
-        <p class="side-label">STATEMENT</p>
-        <p>{ORG.philosophy}</p>
-        <p class="statement-note">
-          学習コンテンツを一方的に届けるのではなく、学生自身が編集・運営に関わることを重視しています。
-        </p>
-      </aside>
+      <dl class="outline" aria-label="団体概要">
+        <div><dt>活動開始</dt><dd>2022年</dd></div>
+        <div><dt>主な活動</dt><dd>学習記事の編集、ゼミ・対話イベントの運営</dd></div>
+        <div><dt>理念</dt><dd>{ORG.philosophy}</dd></div>
+      </dl>
     </section>
 
-    <div class="home-columns">
+    <div class="home-body">
       <section aria-labelledby="projects-heading">
-        <header class="section-heading">
-          <span>01</span>
-          <div>
-            <p>PROJECT INDEX</p>
-            <h2 id="projects-heading">進行中の活動</h2>
-          </div>
-        </header>
-        <ol class="project-index">
+        <div class="section-title">
+          <h2 id="projects-heading">活動していること</h2>
+          <a href={withBase("/projects/")}>すべて見る</a>
+        </div>
+        <ul class="project-list">
           {
-            projects.map((p, index) => (
+            projects.map((p) => (
               <li>
-                <span class="item-no">{String(index + 1).padStart(2, "0")}</span>
-                <div>
+                <div class="project-title">
                   <h3>
                     <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
                   </h3>
-                  <p>{p.data.shortDescription}</p>
+                  <span>{p.data.status === "active" ? "活動中" : "準備中"}</span>
                 </div>
-                <span class="status-text">
-                  {p.data.status === "active" ? "活動中" : "準備中"}
-                </span>
+                <p>{p.data.shortDescription}</p>
               </li>
             ))
           }
-        </ol>
-        <p class="index-link"><a href={withBase("/projects/")}>すべての活動を見る</a></p>
+        </ul>
       </section>
 
-      <section class="news-panel" aria-labelledby="news-heading">
-        <header class="section-heading compact">
-          <span>02</span>
-          <div>
-            <p>FIELD NOTES</p>
-            <h2 id="news-heading">お知らせ</h2>
-          </div>
-        </header>
+      <section class="news" aria-labelledby="news-heading">
+        <div class="section-title">
+          <h2 id="news-heading">お知らせ</h2>
+          <a href={withBase("/news/")}>一覧</a>
+        </div>
         <ul class="news-list">
           {
             news.map((n) => (
@@ -101,147 +88,130 @@ const structuredData = {
             ))
           }
         </ul>
-        <p class="index-link"><a href={withBase("/news/")}>お知らせ一覧</a></p>
       </section>
     </div>
   </div>
 </OrgLayout>
 
 <style>
-  .intro {
+  .home {
+    max-width: 70rem;
+  }
+  .lead {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(15rem, 0.8fr);
-    gap: clamp(2rem, 8vw, 7rem);
-    padding-block: clamp(2rem, 7vw, 5.5rem);
+    grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 0.75fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    padding: var(--space-5) 0 var(--space-6);
     border-bottom: 1px solid var(--border-default);
   }
-  .eyebrow,
-  .side-label,
-  .section-heading p {
-    margin: 0 0 var(--space-2);
-    font-family: var(--font-mono);
-    font-size: calc(0.72rem * var(--text-scale));
-    letter-spacing: 0.09em;
-    color: var(--accent-primary);
+  .lead h1 {
+    margin: 0 0 var(--space-3);
+    max-width: 22em;
+    font-size: calc(2rem * var(--text-scale));
   }
-  .intro h1 {
-    max-width: 17em;
-    margin: 0 0 var(--space-4);
-  }
-  .intro-copy {
-    max-width: 38rem;
+  .lead-copy {
+    max-width: 40rem;
     margin: 0;
-    font-size: calc(1.08rem * var(--text-scale));
+    font-size: calc(1.06rem * var(--text-scale));
   }
-  .intro-actions {
+  .lead-links {
     display: flex;
-    gap: var(--space-3);
     flex-wrap: wrap;
     align-items: center;
+    gap: var(--space-3);
     margin-top: var(--space-4);
   }
-  .statement {
-    border-left: 2px solid var(--accent-primary);
-    padding-left: var(--space-3);
-    align-self: end;
+  .outline {
+    margin: 0;
+    padding: var(--space-3) 0;
+    align-self: start;
+    border-top: 3px solid var(--accent-primary);
   }
-  .statement > p:nth-child(2) {
-    font-weight: 650;
-    font-size: calc(1.08rem * var(--text-scale));
+  .outline div {
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-default);
   }
-  .statement-note {
+  .outline dt {
+    margin-bottom: var(--space-1);
     color: var(--text-secondary);
-    font-size: calc(0.88rem * var(--text-scale));
+    font-size: calc(0.82rem * var(--text-scale));
   }
-  .home-columns {
+  .outline dd {
+    margin: 0;
+  }
+  .home-body {
     display: grid;
-    grid-template-columns: minmax(0, 1.8fr) minmax(17rem, 0.75fr);
-    gap: clamp(2rem, 7vw, 6rem);
+    grid-template-columns: minmax(0, 1.5fr) minmax(17rem, 0.7fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
     padding-block: var(--space-6);
   }
-  .section-heading {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     gap: var(--space-3);
-    align-items: start;
-    padding-top: var(--space-2);
-    border-top: 2px solid var(--accent-primary);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--accent-primary);
   }
-  .section-heading > span {
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    font-size: calc(0.75rem * var(--text-scale));
-  }
-  .section-heading h2 {
+  .section-title h2 {
     margin: 0;
   }
-  .project-index {
-    list-style: none;
-    padding: 0;
-    margin: var(--space-4) 0 0;
+  .section-title a {
+    font-size: calc(0.88rem * var(--text-scale));
   }
-  .project-index li {
-    display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) 4.5rem;
-    gap: var(--space-3);
-    padding-block: var(--space-3);
-    border-top: 1px solid var(--border-default);
-  }
-  .project-index h3,
-  .project-index p {
-    margin: 0;
-  }
-  .project-index p {
-    color: var(--text-secondary);
-    margin-top: var(--space-1);
-  }
-  .item-no,
-  .status-text {
-    font-family: var(--font-mono);
-    font-size: calc(0.75rem * var(--text-scale));
-    color: var(--text-muted);
-  }
-  .status-text {
-    text-align: right;
-  }
-  .index-link {
-    margin-top: var(--space-3);
-  }
+  .project-list,
   .news-list {
     list-style: none;
     margin: 0;
     padding: 0;
   }
+  .project-list li {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .project-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .project-title h3,
+  .project-list p {
+    margin: 0;
+  }
+  .project-title span {
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-size: calc(0.82rem * var(--text-scale));
+  }
+  .project-list p {
+    margin-top: var(--space-1);
+    color: var(--text-secondary);
+  }
   .news-list li {
-    display: block;
-    padding-block: var(--space-3);
-    border-top: 1px solid var(--border-default);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-default);
   }
   .news-list time {
     display: block;
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: calc(0.75rem * var(--text-scale));
     margin-bottom: var(--space-1);
+    color: var(--text-secondary);
+    font-size: calc(0.82rem * var(--text-scale));
   }
   @media (max-width: 767px) {
-    .intro,
-    .home-columns {
+    .lead,
+    .home-body {
       grid-template-columns: 1fr;
       gap: var(--space-5);
     }
-    .intro {
-      padding-block: var(--space-4);
+    .lead {
+      padding: var(--space-4) 0 var(--space-5);
     }
-    .statement {
-      max-width: 30rem;
+    .lead h1 {
+      font-size: calc(1.55rem * var(--text-scale));
     }
-    .project-index li {
-      grid-template-columns: 2rem minmax(0, 1fr);
-    }
-    .status-text {
-      grid-column: 2;
-      text-align: left;
+    .home-body {
+      padding-block: var(--space-5);
     }
   }
 </style>

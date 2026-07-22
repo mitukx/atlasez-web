@@ -57,8 +57,8 @@ const currentPath = Astro.url.pathname;
           <img
             src={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/images/atlasez-logo.png`}
             alt=""
-            width="32"
-            height="32"
+            width="40"
+            height="40"
           />
           <span>{locale === "ja" ? "アトラス" : "Atlas"}</span>
         </a>
@@ -144,7 +144,7 @@ const currentPath = Astro.url.pathname;
     align-items: center;
     gap: var(--space-3);
     flex-wrap: wrap;
-    padding-block: var(--space-2);
+    padding-block: var(--space-1);
   }
   .atlas-logo {
     display: inline-flex;
@@ -155,7 +155,6 @@ const currentPath = Astro.url.pathname;
     color: var(--accent-primary);
     text-decoration: none;
     min-height: var(--touch-target);
-    letter-spacing: 0.035em;
   }
   .atlas-nav {
     display: flex;

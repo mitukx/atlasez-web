@@ -47,19 +47,18 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
   description={t(locale, "siteTagline")}
   alternates={alternates}
 >
-  <div class="container">
-    <section class="atlas-intro">
-      <div class="atlas-intro-main">
-        <p class="eyebrow">OPEN STUDY INDEX / ATLASEZ</p>
-        <h1>{t(locale, "siteName")}</h1>
-        <p class="intro-copy">
+  <div class="container atlas-home">
+    <section class="intro" aria-labelledby="atlas-title">
+      <div>
+        <h1 id="atlas-title">{t(locale, "siteName")}</h1>
+        <p>
           {
             locale === "ja"
-              ? "高校・大学で扱う知識を、前提関係と一緒に編集する学習サイトです。無料・広告なしで、知りたい項目から記事を読み、必要な前提へ戻れます。"
-              : "A free, ad-free study index that edits knowledge together with its prerequisites. Start from a topic, then trace back to what you need first."
+              ? "高校・大学で学ぶ内容を、前提となる知識と結びつけてまとめています。読みたい項目を選ぶか、学習地図から順序を確かめてください。"
+              : "Topics from high school and university study, connected to the knowledge they require. Choose a subject below or use the learning map to check the order."
           }
         </p>
-        <div class="entry-links">
+        <div class="intro-links">
           {
             beginnersEntry && (
               <a
@@ -79,50 +78,48 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
           <a href={atlasPath(locale, "search")}>{t(locale, "search")}</a>
         </div>
       </div>
-      <aside class="atlas-note">
-        <p class="side-label">HOW TO READ</p>
-        <p>
-          {
-            locale === "ja"
-              ? "記事は単独ではなく、概念IDと前提関係で結ばれています。迷ったときは学習地図を開いてください。"
-              : "Articles are joined by concept IDs and prerequisite links. Use the learning map whenever the order is unclear."
-          }
-        </p>
-        <p class="edition">
-          {allArticles.length} ARTICLES / {publishedSubjects.length} SUBJECTS
-        </p>
-      </aside>
+      <dl class="site-summary">
+        <div>
+          <dt>{locale === "ja" ? "公開記事" : "Published articles"}</dt>
+          <dd>{allArticles.length}</dd>
+        </div>
+        <div>
+          <dt>{locale === "ja" ? "公開分野" : "Subjects"}</dt>
+          <dd>{publishedSubjects.length}</dd>
+        </div>
+        <div>
+          <dt>{locale === "ja" ? "利用" : "Access"}</dt>
+          <dd>{locale === "ja" ? "無料・広告なし" : "Free, no ads"}</dd>
+        </div>
+      </dl>
     </section>
 
-    <div class="atlas-columns">
+    <div class="content-columns">
       <section aria-labelledby="subjects-heading">
-        <header class="section-heading">
-          <span>01</span>
-          <div>
-            <p>SUBJECT INDEX</p>
-            <h2 id="subjects-heading">{t(locale, "subjects")}</h2>
-          </div>
-        </header>
-        <ol class="subject-index">
+        <div class="section-title">
+          <h2 id="subjects-heading">{t(locale, "subjects")}</h2>
+          <a href={atlasPath(locale, "map")}>{t(locale, "map")}</a>
+        </div>
+        <ul class="subject-list">
           {
-            publishedSubjects.map((s, index) => (
+            publishedSubjects.map((s) => (
               <li>
-                <span class="subject-no">{String(index + 1).padStart(2, "0")}</span>
-                <div>
+                <div class="subject-heading">
                   <h3>
                     <a href={atlasPath(locale, s.data.slug)}>
                       {localizedName(s.data.name, locale)}
                     </a>
                   </h3>
-                  <p>{localizedName(s.data.description, locale)}</p>
+                  <span>
+                    {countBySubject.get(s.data.slug) ?? 0}
+                    {locale === "ja" ? "記事" : " articles"}
+                  </span>
                 </div>
-                <span class="article-count">
-                  {countBySubject.get(s.data.slug) ?? 0} {t(locale, "articles")}
-                </span>
+                <p>{localizedName(s.data.description, locale)}</p>
               </li>
             ))
           }
-        </ol>
+        </ul>
 
         <details class="preparing-subjects">
           <summary>{t(locale, "preparing")}</summary>
@@ -147,21 +144,14 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
         </details>
       </section>
 
-      <section class="recent-panel" aria-labelledby="recent-heading">
-        <header class="section-heading">
-          <span>02</span>
-          <div>
-            <p>RECENTLY EDITED</p>
-            <h2 id="recent-heading">{t(locale, "recentArticles")}</h2>
-          </div>
-        </header>
+      <aside class="recent" aria-labelledby="recent-heading">
+        <div class="section-title">
+          <h2 id="recent-heading">{t(locale, "recentArticles")}</h2>
+        </div>
         <ul class="recent-list">
           {
             recent.map((a) => (
               <li>
-                <time datetime={a.data.updatedAt.toISOString().slice(0, 10)}>
-                  {formatDate(a.data.updatedAt, locale)}
-                </time>
                 <a
                   href={articlePath(
                     locale,
@@ -172,10 +162,20 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
                 >
                   {a.data.title}
                 </a>
+                <time datetime={a.data.updatedAt.toISOString().slice(0, 10)}>
+                  {formatDate(a.data.updatedAt, locale)}
+                </time>
               </li>
             ))
           }
         </ul>
+        <p class="about-map">
+          {
+            locale === "ja"
+              ? "記事同士は、前提となる知識にもとづいてつながっています。学ぶ順番に迷ったら学習地図を利用できます。"
+              : "Articles are connected by their prerequisites. Use the learning map when you are unsure what to read first."
+          }
+        </p>
         {
           allArticles.length > articles.length && locale !== "ja" && (
             <p class="translation-note">
@@ -183,108 +183,126 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
             </p>
           )
         }
-      </section>
+      </aside>
     </div>
   </div>
 </AtlasLayout>
 
 <style>
-  .atlas-intro {
+  .atlas-home {
+    max-width: 70rem;
+  }
+  .intro {
     display: grid;
-    grid-template-columns: minmax(0, 1.8fr) minmax(15rem, 0.7fr);
-    gap: clamp(2rem, 8vw, 7rem);
-    padding-block: clamp(2rem, 7vw, 5rem);
+    grid-template-columns: minmax(0, 1.55fr) minmax(15rem, 0.65fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    padding: var(--space-4) 0 var(--space-5);
     border-bottom: 1px solid var(--border-default);
   }
-  .eyebrow,
-  .side-label,
-  .section-heading p,
-  .edition {
+  .intro h1 {
     margin: 0 0 var(--space-2);
-    font-family: var(--font-mono);
-    font-size: calc(0.72rem * var(--text-scale));
-    letter-spacing: 0.08em;
     color: var(--accent-primary);
   }
-  .atlas-intro h1 {
-    margin: 0 0 var(--space-3);
-  }
-  .intro-copy {
-    max-width: 39rem;
+  .intro p {
+    max-width: 42rem;
     margin: 0;
-    font-size: calc(1.08rem * var(--text-scale));
+    font-size: calc(1.04rem * var(--text-scale));
   }
-  .entry-links {
+  .intro-links {
     display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
     align-items: center;
-    margin-top: var(--space-4);
-  }
-  .atlas-note {
-    align-self: end;
-    padding-left: var(--space-3);
-    border-left: 2px solid var(--accent-primary);
-    color: var(--text-secondary);
-    font-size: calc(0.9rem * var(--text-scale));
-  }
-  .edition {
-    margin-top: var(--space-4);
-  }
-  .atlas-columns {
-    display: grid;
-    grid-template-columns: minmax(0, 1.75fr) minmax(17rem, 0.7fr);
-    gap: clamp(2rem, 7vw, 6rem);
-    padding-block: var(--space-6);
-  }
-  .section-heading {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
+    flex-wrap: wrap;
     gap: var(--space-3);
-    border-top: 2px solid var(--accent-primary);
-    padding-top: var(--space-2);
+    margin-top: var(--space-3);
   }
-  .section-heading > span,
-  .subject-no,
-  .article-count {
-    font-family: var(--font-mono);
-    font-size: calc(0.75rem * var(--text-scale));
-    color: var(--text-muted);
+  .site-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    align-self: start;
+    border-top: 3px solid var(--accent-primary);
   }
-  .section-heading h2,
-  .subject-index h3,
-  .subject-index p {
+  .site-summary div {
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .site-summary div:nth-child(odd) {
+    padding-right: var(--space-3);
+  }
+  .site-summary div:last-child {
+    grid-column: 1 / -1;
+  }
+  .site-summary dt {
+    color: var(--text-secondary);
+    font-size: calc(0.8rem * var(--text-scale));
+  }
+  .site-summary dd {
+    margin: 0;
+    font-weight: 650;
+  }
+  .content-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(17rem, 0.65fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+    padding-block: var(--space-5) var(--space-6);
+  }
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--accent-primary);
+  }
+  .section-title h2 {
     margin: 0;
   }
-  .subject-index {
+  .section-title a {
+    font-size: calc(0.88rem * var(--text-scale));
+  }
+  .subject-list,
+  .recent-list {
     list-style: none;
+    margin: 0;
     padding: 0;
-    margin: var(--space-4) 0;
   }
-  .subject-index li {
+  .subject-list {
     display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) 7rem;
-    gap: var(--space-3);
-    padding-block: var(--space-3);
-    border-top: 1px solid var(--border-default);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-4);
   }
-  .subject-index h3 {
-    font-size: calc(1.12rem * var(--text-scale));
+  .subject-list li {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-default);
   }
-  .subject-index p {
+  .subject-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .subject-heading h3,
+  .subject-list p {
+    margin: 0;
+  }
+  .subject-heading span {
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-size: calc(0.8rem * var(--text-scale));
+  }
+  .subject-list p {
     margin-top: var(--space-1);
     color: var(--text-secondary);
-  }
-  .article-count {
-    text-align: right;
+    font-size: calc(0.92rem * var(--text-scale));
   }
   .preparing-subjects {
     margin-top: var(--space-4);
   }
   .preparing-list {
+    columns: 2;
     list-style: none;
     margin: 0;
-    columns: 2;
   }
   .preparing-list li {
     display: flex;
@@ -294,42 +312,33 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
     padding: var(--space-1) 0;
     color: var(--text-secondary);
   }
-  .recent-list {
-    list-style: none;
-    margin: var(--space-4) 0 0;
-    padding: 0;
-  }
   .recent-list li {
-    display: block;
-    padding-block: var(--space-3);
-    border-top: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-default);
   }
   .recent-list time {
-    display: block;
     color: var(--text-secondary);
-    font-family: var(--font-mono);
-    font-size: calc(0.75rem * var(--text-scale));
-    margin-bottom: var(--space-1);
+    font-size: calc(0.8rem * var(--text-scale));
   }
+  .about-map,
   .translation-note {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    background: var(--background-secondary);
     color: var(--text-secondary);
-    font-size: calc(0.9rem * var(--text-scale));
+    font-size: calc(0.88rem * var(--text-scale));
   }
   @media (max-width: 767px) {
-    .atlas-intro,
-    .atlas-columns {
+    .intro,
+    .content-columns {
       grid-template-columns: 1fr;
-      gap: var(--space-5);
+      gap: var(--space-4);
     }
-    .atlas-intro {
-      padding-block: var(--space-4);
-    }
-    .subject-index li {
-      grid-template-columns: 2rem minmax(0, 1fr);
-    }
-    .article-count {
-      grid-column: 2;
-      text-align: left;
+    .subject-list {
+      grid-template-columns: 1fr;
     }
     .preparing-list {
       columns: 1;

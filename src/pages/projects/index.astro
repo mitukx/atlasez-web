@@ -29,11 +29,10 @@ const statusLabel = {
     <p class="reading">
       Atlasezは複数のプロジェクトを並行して運営しています。それぞれのページで、活動内容と参加方法を紹介しています。
     </p>
-    <ol class="project-list">
+    <ul class="project-list">
       {
-        projects.map((p, index) => (
+        projects.map((p) => (
           <li>
-            <span class="project-no">{String(index + 1).padStart(2, "0")}</span>
             <div>
               <h2 class="project-name">
                 <a href={withBase(`/projects/${p.data.slug}/`)}>{p.data.name}</a>
@@ -47,7 +46,7 @@ const statusLabel = {
           </li>
         ))
       }
-    </ol>
+    </ul>
   </div>
 </OrgLayout>
 
@@ -65,7 +64,7 @@ const statusLabel = {
   }
   .project-list li {
     display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) 7rem;
+    grid-template-columns: minmax(0, 1fr) 7rem;
     gap: var(--space-3);
     padding-block: var(--space-4);
     border-bottom: 1px solid var(--border-default);
@@ -73,10 +72,8 @@ const statusLabel = {
   .project-list li p {
     margin: var(--space-1) 0 0;
   }
-  .project-no,
   .project-meta {
-    font-family: var(--font-mono);
-    font-size: calc(0.75rem * var(--text-scale));
+    font-size: calc(0.82rem * var(--text-scale));
     color: var(--text-muted);
   }
   .project-meta {
@@ -88,10 +85,9 @@ const statusLabel = {
   }
   @media (max-width: 600px) {
     .project-list li {
-      grid-template-columns: 2rem minmax(0, 1fr);
+      grid-template-columns: 1fr;
     }
     .project-meta {
-      grid-column: 2;
       flex-direction: row;
       text-align: left;
     }

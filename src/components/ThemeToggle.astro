@@ -10,8 +10,7 @@ const { locale = "ja" } = Astro.props;
   aria-pressed="false"
   aria-label={locale === "ja" ? "ダークモードに切り替える" : "Switch to dark mode"}
 >
-  <span aria-hidden="true" data-theme-icon>●</span>
-  <span data-theme-label>{locale === "ja" ? "ダーク" : "Dark"}</span>
+  <span data-theme-label>{locale === "ja" ? "ダーク表示" : "Dark mode"}</span>
 </button>
 
 <script>
@@ -22,7 +21,6 @@ const { locale = "ja" } = Astro.props;
     const dark = root.dataset.prefBg === "dark";
     buttons.forEach((button) => {
       const label = button.querySelector<HTMLElement>("[data-theme-label]");
-      const icon = button.querySelector<HTMLElement>("[data-theme-icon]");
       button.setAttribute("aria-pressed", String(dark));
       button.setAttribute(
         "aria-label",
@@ -31,9 +29,8 @@ const { locale = "ja" } = Astro.props;
           : dark ? "Switch to light mode" : "Switch to dark mode",
       );
       if (label) label.textContent = document.documentElement.lang === "ja"
-        ? dark ? "ライト" : "ダーク"
-        : dark ? "Light" : "Dark";
-      if (icon) icon.textContent = dark ? "○" : "●";
+        ? dark ? "ライト表示" : "ダーク表示"
+        : dark ? "Light mode" : "Dark mode";
     });
   }
 
@@ -61,7 +58,6 @@ const { locale = "ja" } = Astro.props;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
     min-height: var(--touch-target);
     padding: 0 var(--space-2);
     border: 1px solid var(--border-default);
@@ -73,5 +69,4 @@ const { locale = "ja" } = Astro.props;
     cursor: pointer;
   }
   .theme-toggle:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
-  [data-theme-icon] { font-size: 0.8em; }
 </style>

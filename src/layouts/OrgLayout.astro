@@ -41,8 +41,8 @@ const currentPath = Astro.url.pathname;
           <img
             src={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/images/atlasez-logo.png`}
             alt=""
-            width="36"
-            height="36"
+            width="44"
+            height="44"
           />
           <span>Atlasez</span>
         </a>
@@ -145,7 +145,7 @@ const currentPath = Astro.url.pathname;
     align-items: center;
     gap: var(--space-3);
     flex-wrap: wrap;
-    padding-block: var(--space-2);
+    padding-block: var(--space-1);
   }
   .org-logo {
     display: inline-flex;
@@ -156,7 +156,6 @@ const currentPath = Astro.url.pathname;
     color: var(--text-primary);
     text-decoration: none;
     min-height: var(--touch-target);
-    letter-spacing: 0.035em;
   }
   .org-nav ul {
     display: flex;
@@ -182,6 +181,12 @@ const currentPath = Astro.url.pathname;
   }
   .atlas-link {
     margin-left: auto;
+    background: transparent;
+    color: var(--accent-primary);
+  }
+  .atlas-link:hover {
+    background: var(--accent-subtle);
+    color: var(--accent-hover);
   }
   main {
     min-height: 60vh;
@@ -222,6 +227,9 @@ const currentPath = Astro.url.pathname;
     color: var(--text-secondary);
   }
   @media (max-width: 767px) {
+    .org-header-inner {
+      gap: var(--space-2);
+    }
     .atlas-link {
       margin-left: 0;
     }
