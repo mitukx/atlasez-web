@@ -19,7 +19,22 @@ export default defineConfig({
   integrations: [sitemap()],
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [
+      [
+        rehypeKatex,
+        {
+          throwOnError: false,
+          strict: "warn",
+          macros: {
+            "\\dv": "\\frac{\\mathrm{d}#1}{\\mathrm{d}#2}",
+            "\\dvtwo": "\\frac{\\mathrm{d}^{2}#1}{\\mathrm{d}#2^{2}}",
+            "\\dd": "\\,\\mathrm{d}#1",
+            "\\vdot": "\\mathbin{\\cdot}",
+            "\\divergence": "\\nabla\\mathbin{\\cdot}",
+          },
+        },
+      ],
+    ],
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
     },

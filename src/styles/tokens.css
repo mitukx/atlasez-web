@@ -112,27 +112,6 @@
   --link: #8fc9b1;
 }
 
-/* OSのダーク設定を初期値として尊重（未設定時のみ） */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-pref-bg]) {
-    color-scheme: dark;
-    --text-primary: #e8e6e1;
-    --text-secondary: #b5b1a8;
-    --text-muted: #8f8b82;
-    --background-primary: #191a1c;
-    --background-secondary: #232427;
-    --background-inset: #2b2c30;
-    --border-default: #3d3e42;
-    --border-strong: #6a6b70;
-    --accent-primary: #7fa8cc;
-    --accent-hover: #a3c2dd;
-    --accent-subtle: #263341;
-    --on-accent: #10151a;
-    --link: #8db4d6;
-    --focus-ring: #e8a45c;
-  }
-}
-
 /* ---------- 表示設定: 高コントラスト ---------- */
 [data-pref-contrast="high"] {
   --text-primary: #000000;

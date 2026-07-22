@@ -37,11 +37,11 @@ references: []
 
 空間の座標系について許される変換は、
 
-空間並進 $\vb*{r}'(t)=\vb*{r}(t)-\vb*{b}(t)$ 空間回転 $\vb*{r}'(t)=R^{-1}(t)\vb*{r}(t)\ (\det R=1)$ 空間反転 $\vb*{r}'(t)=-\vb*{r}(t)$
+空間並進 $\boldsymbol{r}'(t)=\boldsymbol{r}(t)-\boldsymbol{b}(t)$ 空間回転 $\boldsymbol{r}'(t)=R^{-1}(t)\boldsymbol{r}(t)\ (\det R=1)$ 空間反転 $\boldsymbol{r}'(t)=-\boldsymbol{r}(t)$
 
 に限られる。並進は原点をずらし、回転は原点はそのままに原点周りに基底を回転させる。反転は空間の次元が奇数であることから回転には含まれず、鏡映は反転と回転の合成によって実現される。
 
-$R(t)$や$\vb*{b}(t)$は時刻に依存する$C^2$級のものであれば任意に選べることに注意する。($C^2$級に限られることは運動方程式の要請より従う。)
+$R(t)$や$\boldsymbol{b}(t)$は時刻に依存する$C^2$級のものであれば任意に選べることに注意する。($C^2$級に限られることは運動方程式の要請より従う。)
 
 ### 時間の座標系の変換
 
@@ -55,7 +55,7 @@ $R(t)$や$\vb*{b}(t)$は時刻に依存する$C^2$級のものであれば任意
 
 空間と時間の座標系について禁止される変換としては、
 
-スケール変換 $\vb*{r}'(t)=\frac{1}{\lambda}\vb*{r}(t)\ (|\lambda|\neq1),\ t'=\frac{1}{\mu}t\ (\mu\neq1)$ 時間反転 $t'=-t$ 位置に依存する時間変換 $t'=t-T(\vb*{r})$ その他一様でない一般の座標変換 $\vb*{r}'=\vb*{r}'(\vb*{r}),\ t'=t'(t)$
+スケール変換 $\boldsymbol{r}'(t)=\frac{1}{\lambda}\boldsymbol{r}(t)\ (|\lambda|\neq1),\ t'=\frac{1}{\mu}t\ (\mu\neq1)$ 時間反転 $t'=-t$ 位置に依存する時間変換 $t'=t-T(\boldsymbol{r})$ その他一様でない一般の座標変換 $\boldsymbol{r}'=\boldsymbol{r}'(\boldsymbol{r}),\ t'=t'(t)$
 
 がある。
 
@@ -63,4 +63,4 @@ $R(t)$や$\vb*{b}(t)$は時刻に依存する$C^2$級のものであれば任意
 
 ### 質点の位置・速度・加速度の変換
 
-空間座標系の変換に対して、質点の位置・速度・加速度はそれぞれ $\vb*{r}'=R^{-1}\vb*{r}-\vb*{b}$ $\vb*{v}'=R^{-1}\vb*{v}+\dot{(R^{-1})}\vb*{r}-\dot{\vb*{b}}$ $\vb*{a}'=R^{-1}\vb*{a}+2\dot{(R^{-1})}\vb*{v}+\ddot{(R^{-1})}\vb*{r}-\ddot{\vb*{b}}$ と変換する(簡単のため$R$は$\det R=-1$も含めた直交変換とした)。時間座標系の変換に対しては質点の位置・速度・加速度は変化しない。
+空間座標系の変換に対して、質点の位置・速度・加速度はそれぞれ $\boldsymbol{r}'=R^{-1}\boldsymbol{r}-\boldsymbol{b}$ $\boldsymbol{v}'=R^{-1}\boldsymbol{v}+\dot{(R^{-1})}\boldsymbol{r}-\dot{\boldsymbol{b}}$ $\boldsymbol{a}'=R^{-1}\boldsymbol{a}+2\dot{(R^{-1})}\boldsymbol{v}+\ddot{(R^{-1})}\boldsymbol{r}-\ddot{\boldsymbol{b}}$ と変換する(簡単のため$R$は$\det R=-1$も含めた直交変換とした)。時間座標系の変換に対しては質点の位置・速度・加速度は変化しない。

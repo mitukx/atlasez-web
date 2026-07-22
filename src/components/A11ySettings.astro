@@ -207,6 +207,14 @@ const groups = [
         );
         if (input) input.checked = true;
       }
+      const syncBackgroundChoice = () => {
+        const value = document.documentElement.dataset.prefBg ?? "default";
+        const input = form.querySelector<HTMLInputElement>(
+          `input[name="bg"][value="${value}"]`,
+        );
+        if (input) input.checked = true;
+      };
+      window.addEventListener("atlasez-theme-change", syncBackgroundChoice);
       form.addEventListener("change", () => {
         const data = new FormData(form);
         const next: Record<string, string> = {};
@@ -219,6 +227,7 @@ const groups = [
           /* 保存不可でも表示には適用する */
         }
         apply(next);
+        window.dispatchEvent(new CustomEvent("atlasez-theme-change"));
       });
       form
         .querySelector("[data-a11y-reset]")
@@ -232,6 +241,7 @@ const groups = [
             .querySelectorAll<HTMLInputElement>('input[value="default"]')
             .forEach((i) => (i.checked = true));
           apply({});
+          window.dispatchEvent(new CustomEvent("atlasez-theme-change"));
         });
     },
   );

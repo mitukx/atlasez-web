@@ -2,6 +2,7 @@
 /** Atlasez公式サイトの共通レイアウト */
 import BaseHead from "../components/BaseHead.astro";
 import A11ySettings from "../components/A11ySettings.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
 import { withBase, ORG } from "../lib/site";
 
 interface Props {
@@ -66,6 +67,7 @@ const currentPath = Astro.url.pathname;
         <a class="button atlas-link" href={withBase("/atlas/ja/")}
           >学習サイト アトラス</a
         >
+        <ThemeToggle locale="ja" />
       </div>
     </header>
     <main id="main">

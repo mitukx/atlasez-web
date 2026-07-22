@@ -1,0 +1,77 @@
+---
+interface Props { locale?: "ja" | "en" }
+const { locale = "ja" } = Astro.props;
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-pressed="false"
+  aria-label={locale === "ja" ? "ダークモードに切り替える" : "Switch to dark mode"}
+>
+  <span aria-hidden="true" data-theme-icon>●</span>
+  <span data-theme-label>{locale === "ja" ? "ダーク" : "Dark"}</span>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+
+  function updateThemeButtons(): void {
+    const dark = root.dataset.prefBg === "dark";
+    buttons.forEach((button) => {
+      const label = button.querySelector<HTMLElement>("[data-theme-label]");
+      const icon = button.querySelector<HTMLElement>("[data-theme-icon]");
+      button.setAttribute("aria-pressed", String(dark));
+      button.setAttribute(
+        "aria-label",
+        document.documentElement.lang === "ja"
+          ? dark ? "ライトモードに切り替える" : "ダークモードに切り替える"
+          : dark ? "Switch to light mode" : "Switch to dark mode",
+      );
+      if (label) label.textContent = document.documentElement.lang === "ja"
+        ? dark ? "ライト" : "ダーク"
+        : dark ? "Light" : "Dark";
+      if (icon) icon.textContent = dark ? "○" : "●";
+    });
+  }
+
+  buttons.forEach((button) => button.addEventListener("click", () => {
+    let prefs: Record<string, string> = {};
+    try { prefs = JSON.parse(localStorage.getItem("atlasez-prefs") ?? "{}"); } catch { /* ignore */ }
+    if (root.dataset.prefBg === "dark") {
+      delete root.dataset.prefBg;
+      delete prefs.bg;
+    } else {
+      root.dataset.prefBg = "dark";
+      prefs.bg = "dark";
+    }
+    localStorage.setItem("atlasez-prefs", JSON.stringify(prefs));
+    updateThemeButtons();
+    window.dispatchEvent(new CustomEvent("atlas-theme-change"));
+  }));
+  updateThemeButtons();
+  window.addEventListener("storage", updateThemeButtons);
+  window.addEventListener("atlasez-theme-change", updateThemeButtons);
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--touch-target);
+    padding: 0 var(--space-2);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    background: var(--background-primary);
+    font: inherit;
+    font-size: calc(0.85rem * var(--text-scale));
+    cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+  [data-theme-icon] { font-size: 0.8em; }
+</style>
