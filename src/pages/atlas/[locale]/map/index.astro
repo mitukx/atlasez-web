@@ -68,13 +68,15 @@ const edgeKinds = [
     <p class="reading">
       {
         locale === "ja"
-          ? "ノードは概念、矢印は学習上のつながりを表します。グラフが使いにくい場合は、下の「リスト表示」「表形式」「学習ルート検索」から同じ情報を利用できます。"
-          : "Nodes are concepts and edges are learning relationships. The same information is available below as a list, a table, and a route-search form."
+          ? "カードは学ぶ項目、つなぎ線は前提項目と次に学ぶ項目の関係を表します。スレッド表示が使いにくい場合は、下の「リスト表示」「表形式」「学習ルート検索」から同じ情報を利用できます。"
+          : "Cards are learning topics, and connector lines show prerequisites and what follows. The same information is available below as a list, a table, and a route-search form."
       }
     </p>
 
     <section aria-labelledby="graph-heading">
-      <h2 id="graph-heading">{t(locale, "graphView")}</h2>
+      <h2 id="graph-heading">
+        {locale === "ja" ? "スレッド表示" : "Thread view"}
+      </h2>
       <div class="map-toolbar" data-graph-controls hidden>
         <label for="map-search" class="visually-hidden">
           {t(locale, "search")}
@@ -113,6 +115,13 @@ const edgeKinds = [
           {t(locale, "shareView")}
         </button>
       </div>
+      <p class="map-thread-hint" data-graph-controls hidden>
+        {
+          locale === "ja"
+            ? "上から学習順に並び、前提項目への返信のように、次の項目が右へ下がって表示されます。地図をドラッグして続きを確認できます。"
+            : "Concepts follow the learning order. Each dependent concept is indented like a reply to its prerequisite. Drag the map to continue."
+        }
+      </p>
       <div
         class="map-canvas"
         id="learning-map"
@@ -303,6 +312,11 @@ const edgeKinds = [
     color: var(--text-secondary);
     font-size: calc(0.9rem * var(--text-scale));
   }
+  .map-thread-hint {
+    margin: 0 0 var(--space-2);
+    color: var(--text-secondary);
+    font-size: calc(0.9rem * var(--text-scale));
+  }
   .map-detail {
     margin-top: var(--space-2);
     min-height: 2.5rem;
@@ -384,7 +398,7 @@ const edgeKinds = [
   }
 
   const container = document.getElementById("learning-map");
-  const controls = document.querySelector<HTMLElement>("[data-graph-controls]");
+  const controls = document.querySelectorAll<HTMLElement>("[data-graph-controls]");
   const detail = document.querySelector<HTMLElement>("[data-map-detail]");
 
   async function initMap(): Promise<void> {
@@ -398,22 +412,14 @@ const edgeKinds = [
     const label = (n: GraphNode) =>
       locale === "en" && n.name.en ? n.name.en : n.name.ja;
 
-    if (controls) controls.hidden = false;
+    controls.forEach((control) => (control.hidden = false));
 
     const styles = getComputedStyle(document.documentElement);
-    const accent = styles.getPropertyValue("--accent-primary").trim() || "#1e5c48";
+    const accent = styles.getPropertyValue("--accent-primary").trim() || "#176ea6";
     const textColor = styles.getPropertyValue("--text-primary").trim() || "#1c1c1c";
     const muted = styles.getPropertyValue("--border-strong").trim() || "#8d897f";
     const canvasColor = styles.getPropertyValue("--background-primary").trim() || "#ffffff";
-    const subjectColors: Record<string, string> = {
-      mathematics: "#1769aa",
-      chemistry: "#8b3f96",
-      kanji: "#9a4f16",
-      physics: "#166b52",
-      biology: "#467a1f",
-      kobun: "#8a3150",
-      astronomy: "#4c4f9d",
-    };
+    const nodeSurface = styles.getPropertyValue("--background-primary").trim() || "#ffffff";
 
     const cy = cytoscape({
       container,
@@ -444,42 +450,45 @@ const edgeKinds = [
             "font-weight": 600,
             color: textColor,
             "text-wrap": "wrap",
-            "text-max-width": "120px",
+            "text-max-width": "132px",
             "text-valign": "center",
-            "text-outline-color": canvasColor,
-            "text-outline-width": 3,
-            width: 28,
-            height: 28,
-            "background-color": accent,
+            "text-halign": "center",
+            "text-outline-width": 0,
+            shape: "round-rectangle",
+            width: 154,
+            height: 46,
+            "background-color": nodeSurface,
             "border-width": 2,
-            "border-color": canvasColor,
+            "border-color": accent,
           },
         },
-        ...Object.entries(subjectColors).map(([subject, color]) => ({
-          selector: `node[subject = "${subject}"]`,
-          style: { "background-color": color },
-        })),
         {
           selector: 'node[hasArticle = "no"]',
           style: {
             "background-color": canvasColor,
             "border-width": 2,
             "border-color": muted,
+            "border-style": "dashed",
+            color: muted,
           },
         },
         {
           selector: "node:selected",
           style: {
             "border-width": 4,
-            "border-color": "#b3560e",
+            "border-color": "#e4771b",
+            "background-color": "#fff4e8",
           },
         },
         {
           selector: "edge",
           style: {
-            width: 2.5,
+            width: 1.5,
             "line-color": muted,
-            "curve-style": "bezier",
+            "curve-style": "taxi",
+            "taxi-direction": "downward",
+            "taxi-turn": 24,
+            "target-arrow-shape": "none",
           },
         },
         {
@@ -488,6 +497,7 @@ const edgeKinds = [
             "line-color": accent,
             "target-arrow-shape": "triangle",
             "target-arrow-color": accent,
+            width: 2.5,
           },
         },
         {
@@ -518,13 +528,14 @@ const edgeKinds = [
         {
           selector: ".route-highlight",
           style: {
-            "background-color": "#b3560e",
-            "line-color": "#b3560e",
-            "target-arrow-color": "#b3560e",
+            "background-color": "#fff4e8",
+            "border-color": "#e4771b",
+            "line-color": "#e4771b",
+            "target-arrow-color": "#e4771b",
           },
         },
       ],
-      layout: { name: "cose", animate: false, padding: 45, nodeRepulsion: 9000 },
+      layout: { name: "preset", fit: false },
       wheelSensitivity: 0.2,
       minZoom: 0.25,
       maxZoom: 3,
@@ -538,6 +549,36 @@ const edgeKinds = [
         cy.zoom(0.72);
         cy.center(elements);
       }
+    }
+
+    function layoutAsThread(subject: string): void {
+      const visibleData = data.nodes.filter((node) => !subject || node.subject === subject);
+      const visibleIds = new Set(visibleData.map((node) => node.id));
+      const children = new Map<string, string[]>();
+      for (const node of visibleData) {
+        const parent = node.prerequisites.find((id) => visibleIds.has(id));
+        if (parent) children.set(parent, [...(children.get(parent) ?? []), node.id]);
+      }
+      const roots = visibleData
+        .filter((node) => !node.prerequisites.some((id) => visibleIds.has(id)))
+        .map((node) => node.id);
+      const ordered: { id: string; depth: number }[] = [];
+      const visited = new Set<string>();
+      const walk = (id: string, depth: number) => {
+        if (visited.has(id)) return;
+        visited.add(id);
+        ordered.push({ id, depth });
+        for (const child of children.get(id) ?? []) walk(child, depth + 1);
+      };
+      for (const root of roots) walk(root, 0);
+      for (const node of visibleData) walk(node.id, 0);
+
+      ordered.forEach(({ id, depth }, index) => {
+        cy.getElementById(id).position({ x: 120 + depth * 190, y: 52 + index * 76 });
+      });
+      cy.layout({ name: "preset", fit: false }).run();
+      cy.zoom(0.92);
+      cy.pan({ x: 72, y: 56 });
     }
 
     function showDetail(id: string): void {
@@ -625,8 +666,7 @@ const edgeKinds = [
       else url.searchParams.delete("subject");
       history.replaceState(null, "", url);
       if (relayout) {
-        cy.layout({ name: "cose", animate: false, padding: 45, nodeRepulsion: 9000 }).run();
-        fitReadable(visibleNodes);
+        layoutAsThread(subject);
       }
     }
 

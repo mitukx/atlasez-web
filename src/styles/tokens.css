@@ -53,11 +53,11 @@
   --touch-target: 44px;
 }
 
-/* 学習サイトのアクセント（深緑） */
+/* 学習サイトのアクセント（旧サイトを引き継ぐ青） */
 [data-site="atlas"] {
-  --accent-primary: #1e5c48;
-  --accent-hover: #144535;
-  --accent-subtle: #e6efeb;
+  --accent-primary: #176ea6;
+  --accent-hover: #0e5686;
+  --accent-subtle: #e5f2fa;
 }
 
 /* ---------- 表示設定: 文字サイズ ---------- */
@@ -106,10 +106,10 @@
 }
 [data-site="atlas"][data-pref-bg="dark"],
 [data-pref-bg="dark"] [data-site="atlas"] {
-  --accent-primary: #7dbfa5;
-  --accent-hover: #a0d4bf;
-  --accent-subtle: #22352d;
-  --link: #8fc9b1;
+  --accent-primary: #79bce6;
+  --accent-hover: #a7d5f2;
+  --accent-subtle: #203746;
+  --link: #8bc9ed;
 }
 
 /* ---------- 表示設定: 高コントラスト ---------- */
