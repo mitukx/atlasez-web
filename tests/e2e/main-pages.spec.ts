@@ -100,6 +100,18 @@ test.describe("学習サイト", () => {
       "xlarge",
     );
   });
+
+  test("運営紹介に現行サイトから移植した担当者が表示される", async ({
+    page,
+  }) => {
+    await page.goto("atlas/ja/team/");
+    await expect(page.locator("h1")).toContainText("運営紹介");
+    await expect(page.getByText("釜口 悠太", { exact: true })).toBeVisible();
+    await expect(
+      page.locator("[data-member]").filter({ hasText: "福山 月" }),
+    ).toContainText("生物担当");
+    await expect(page.locator("[data-member]")).toHaveCount(93);
+  });
 });
 
 test.describe("キーボード操作", () => {

@@ -15,6 +15,7 @@ const pages = [
   "atlas/ja/mathematics/group-theory/group-definition/",
   "atlas/ja/map/",
   "atlas/ja/search/",
+  "atlas/ja/team/",
   "atlas/en/",
 ];
 
