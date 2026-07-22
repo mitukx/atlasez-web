@@ -24,9 +24,11 @@ export function articlePath(
 
 export const ORG = {
   name: "Atlasez",
-  philosophy: "未来の学びを創る。学びで未来を創る。",
+  slogan: "未来の学びを創る。学びで未来を創る。",
+  philosophy:
+    "「学び」を共に楽しみ、共に創ることを通じ、一人一人が自分の持つ世界観を拡大・更新し続けることによって、全ての人がより一層日々を楽しめるような未来へと、改善・向上し続ける社会を実現する。",
   email: "atlasez.contact@gmail.com",
-  githubRepo: "https://github.com/atlasez/atlasez-web",
+  githubRepo: "https://github.com/mitukx/atlasez-web",
   sns: {
     x: "https://twitter.com/atlasez_info",
     instagram: "https://www.instagram.com/atlasez_info",

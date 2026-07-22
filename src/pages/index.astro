@@ -16,7 +16,7 @@ const structuredData = {
   name: "Atlasez",
   url: Astro.site?.href,
   email: ORG.email,
-  slogan: ORG.philosophy,
+  slogan: ORG.slogan,
 };
 ---
 
@@ -28,10 +28,13 @@ const structuredData = {
   <div class="container home">
     <section class="lead" aria-labelledby="lead-heading">
       <div>
-        <h1 id="lead-heading">Atlasezは、学生の手で学ぶ場所をつくっています。</h1>
+        <h1 id="lead-heading">
+          <span>未来の学びを創る。</span>
+          <span>学びで未来を創る。</span>
+        </h1>
         <p class="lead-copy">
-          Atlasezは、無料・広告なしの学習サイト「アトラス」を編集する学生団体です。
-          記事を書くこと、ゼミや対話の場を運営することを通して、学ぶ人自身が知識づくりに参加できる環境を整えています。
+          Atlasezは、学生などの若者が主体となって、「未来の学びを創る・学びで未来を創る」団体です。
+          学習サイト、ゼミ、対話の場など、学びに関わる複数のプロジェクトを運営しています。
         </p>
         <div class="lead-links">
           <a class="button" href={withBase("/atlas/ja/")}>学習サイトを見る</a>
@@ -40,9 +43,9 @@ const structuredData = {
         </div>
       </div>
       <dl class="outline" aria-label="団体概要">
-        <div><dt>活動開始</dt><dd>2022年</dd></div>
-        <div><dt>主な活動</dt><dd>学習記事の編集、ゼミ・対話イベントの運営</dd></div>
-        <div><dt>理念</dt><dd>{ORG.philosophy}</dd></div>
+        <div><dt>主体</dt><dd>学生などの若者</dd></div>
+        <div><dt>構成</dt><dd>複数のプロジェクトと運営事務局</dd></div>
+        <div><dt>名前の由来</dt><dd>「地図帳」を意味する Atlas の複数形 Atlases</dd></div>
       </dl>
     </section>
 
@@ -108,6 +111,9 @@ const structuredData = {
     margin: 0 0 var(--space-3);
     max-width: 22em;
     font-size: calc(2rem * var(--text-scale));
+  }
+  .lead h1 span {
+    display: block;
   }
   .lead-copy {
     max-width: 40rem;

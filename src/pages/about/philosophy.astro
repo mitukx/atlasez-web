@@ -2,13 +2,28 @@
 import OrgLayout from "../../layouts/OrgLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import { withBase, ORG } from "../../lib/site";
+
+const goals = [
+  "全ての人に開かれた学びを",
+  "心から楽しめる学びを",
+  "身になる学びを効率的に",
+  "より広くより深く学び続けよう",
+  "多様な人々とのつながりを広げよう",
+  "自分の可能性を最大限に引き出そう",
+  "夢や生きがいを探してみよう",
+  "自分の生活や環境を充実させるスキルをつけよう",
+  "自他に寛容な価値観を養って行動につなげよう",
+  "新しい学びの形を社会全体へ",
+  "社会問題を解決してより良い社会へ",
+  "学びを活かし民主主義の質を高めよう",
+];
 ---
 
 <OrgLayout
   title="理念・目標"
-  description="Atlasezの理念「未来の学びを創る。学びで未来を創る。」と活動目標について。"
+  description="Atlasezの理念と12の目標を紹介します。"
 >
-  <div class="container">
+  <div class="container philosophy-page">
     <Breadcrumb
       items={[
         { label: "ホーム", href: withBase("/") },
@@ -16,37 +31,89 @@ import { withBase, ORG } from "../../lib/site";
         { label: "理念・目標" },
       ]}
     />
-    <h1>理念・目標</h1>
-    <div class="reading">
-      <h2>理念</h2>
+
+    <header>
+      <p class="section-label">PHILOSOPHY</p>
+      <h1>Atlasezの理念</h1>
       <p class="philosophy-statement">{ORG.philosophy}</p>
-      <p>
-        学びの形は時代とともに変わり続けています。私たちは、これからの時代に合った
-        新しい学びの形を自分たちの手で創り出すこと（未来の学びを創る）、
-        そして学びを通じて一人一人がより良い未来を切り拓けるようにすること
-        （学びで未来を創る）の両方を大切にしています。
-      </p>
-      <h2>目標</h2>
-      <ul>
-        <li>0からの自学自習に使える、無料・広告なしの学習環境を提供する</li>
-        <li>学ぶ人同士・教える人同士が支え合えるコミュニティを育てる</li>
-        <li>学生が主体となって学びの仕組みそのものを企画・運営する経験の場をつくる</li>
-      </ul>
-      <p class="note">
-        ※ 本ページの文章は移行用の下書きです。正式な文面は現行サイトから移行してください（docs/MIGRATION_PLAN.md参照）。
-      </p>
-    </div>
+    </header>
+
+    <section aria-labelledby="goals-heading">
+      <div class="goals-heading">
+        <p class="section-label">GOALS</p>
+        <h2 id="goals-heading">目標</h2>
+      </div>
+      <ol class="goal-list">
+        {
+          goals.map((goal) => (
+            <li>
+              <span>{goal}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
   </div>
 </OrgLayout>
 
 <style>
-  .philosophy-statement {
-    font-size: calc(1.3rem * var(--text-scale));
-    font-weight: 700;
-    color: var(--accent-primary);
+  .philosophy-page {
+    max-width: 68rem;
   }
-  .note {
-    color: var(--text-secondary);
-    font-size: calc(0.85rem * var(--text-scale));
+  .philosophy-page header {
+    max-width: 52rem;
+    padding: var(--space-4) 0 var(--space-6);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .section-label {
+    margin: 0 0 var(--space-1);
+    color: var(--accent-primary);
+    font-size: calc(0.76rem * var(--text-scale));
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  h1 {
+    margin-top: 0;
+  }
+  .philosophy-statement {
+    margin: var(--space-4) 0 0;
+    font-size: calc(1.24rem * var(--text-scale));
+    line-height: 2;
+  }
+  .philosophy-page section {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.45fr) minmax(0, 1.55fr);
+    gap: clamp(2rem, 7vw, 6rem);
+    padding-top: var(--space-6);
+  }
+  .goals-heading h2 {
+    margin: 0;
+  }
+  .goal-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: goal;
+    border-top: 2px solid var(--accent-primary);
+  }
+  .goal-list li {
+    counter-increment: goal;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .goal-list li::before {
+    content: counter(goal, decimal-leading-zero);
+    color: var(--accent-primary);
+    font-size: calc(0.78rem * var(--text-scale));
+    font-weight: 700;
+  }
+  @media (max-width: 767px) {
+    .philosophy-page section {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
   }
 </style>

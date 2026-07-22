@@ -8,13 +8,28 @@ import { test, expect } from "@playwright/test";
 test.describe("公式サイト", () => {
   test("ホームに理念とナビゲーションが表示される", async ({ page }) => {
     await page.goto("./");
-    await expect(page.locator("h1")).toContainText("Atlasez");
-    await expect(
-      page.locator("main").getByText("未来の学びを創る。学びで未来を創る。"),
-    ).toBeVisible();
+    await expect(page.locator("h1")).toContainText("未来の学びを創る。");
+    await expect(page.locator("h1")).toContainText("学びで未来を創る。");
     await expect(
       page.getByRole("link", { name: "学習サイト アトラス" }).first(),
     ).toBeVisible();
+  });
+
+  test("理念・組織構成・実在する運営メンバーを掲載する", async ({ page }) => {
+    await page.goto("about/philosophy/");
+    await expect(page.locator(".goal-list li")).toHaveCount(12);
+    await expect(page.getByText("全ての人に開かれた学びを")).toBeVisible();
+
+    await page.goto("about/organization/");
+    await expect(page.getByAltText(/Atlasezの運営事務局/)).toBeVisible();
+    await expect(page.getByAltText(/代表と副代表/)).toBeVisible();
+
+    await page.goto("about/members/");
+    await expect(
+      page.getByRole("heading", { name: "釜口 悠太" }),
+    ).toBeVisible();
+    await expect(page.getByText("サンプル代表")).toHaveCount(0);
+    await expect(page.locator("[data-member]")).toHaveCount(92);
   });
 
   test("プロジェクト一覧に学習サイトが載っている", async ({ page }) => {

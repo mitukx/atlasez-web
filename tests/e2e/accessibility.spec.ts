@@ -6,6 +6,10 @@ import AxeBuilder from "@axe-core/playwright";
 const pages = [
   "./",
   "about/",
+  "about/philosophy/",
+  "about/organization/",
+  "about/members/",
+  "about/history/",
   "projects/",
   "news/",
   "join/",
