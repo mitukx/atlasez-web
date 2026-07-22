@@ -10,6 +10,7 @@ const pages = [
   "news/",
   "join/",
   "atlas/ja/",
+  "atlas/ja/guide/",
   "atlas/ja/mathematics/",
   "atlas/ja/mathematics/set-theory/",
   "atlas/ja/mathematics/group-theory/group-definition/",

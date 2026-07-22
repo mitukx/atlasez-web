@@ -38,6 +38,23 @@ test.describe("学習サイト", () => {
     await expect(page.getByText("準備中").first()).toBeVisible();
   });
 
+  test("はじめての方へは専用ガイドに移動する", async ({ page }) => {
+    await page.goto("atlas/ja/");
+    await page.getByRole("link", { name: "はじめての方へ" }).click();
+    await expect(page).toHaveURL(/\/atlas\/ja\/guide\/$/);
+    await expect(page.locator("h1")).toHaveText("はじめての方へ");
+  });
+
+  test("本文準備中の目次項目を記事一覧に表示する", async ({ page }) => {
+    await page.goto("atlas/ja/mathematics/set-theory/");
+    const planned = page
+      .locator(".planned-article")
+      .filter({ hasText: "集合族" });
+    await expect(planned).toBeVisible();
+    await expect(planned).toContainText("準備中");
+    await expect(planned.getByRole("link")).toHaveCount(0);
+  });
+
   test("記事ページに目次・前提記事・難易度が表示される", async ({ page }) => {
     await page.goto("atlas/ja/mathematics/group-theory/group-definition/");
     await expect(page.locator("h1")).toContainText("群の定義");

@@ -3,6 +3,7 @@
  * コンテンツ検証スクリプト（CIで実行）。
  * - 概念: 重複ID / 存在しない参照 / prerequisite循環
  * - 記事: articleId重複 / ロケール内slug重複 / 存在しない概念参照 / 必須フィールド
+ * - 準備中記事: 存在しない分野・カテゴリ / 重複 / 公開済み記事との題名衝突
  * 失敗時は終了コード1。
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -81,6 +82,7 @@ function walk(dir) {
 const articleFiles = walk(join(root, "src/content/articles"));
 const articleIds = new Set();
 const slugKeys = new Set();
+const articleTitleKeys = new Set();
 const REQUIRED = [
   "articleId",
   "locale",
@@ -124,12 +126,43 @@ for (const file of articleFiles) {
   const slugKey = `${fm.locale}/${fm.subject}/${fm.category}/${fm.slug}`;
   if (slugKeys.has(slugKey)) errors.push(`slugが重複: ${slugKey}`);
   slugKeys.add(slugKey);
+  articleTitleKeys.add(`${fm.locale}/${fm.subject}/${fm.category}/${fm.title}`);
   for (const c of fm.concepts ?? []) {
     if (!conceptIds.has(c.id))
       errors.push(`${file}: 存在しない概念 ${c.id} を参照`);
   }
   for (const p of [...(fm.prerequisites ?? []), ...(fm.related ?? [])]) {
     if (!conceptIds.has(p)) errors.push(`${file}: 存在しない概念 ${p} を参照`);
+  }
+}
+
+// ---------- 本文準備中の記事 ----------
+const subjects = parseYaml(
+  readFileSync(join(root, "src/content/subjects/subjects.yaml"), "utf8"),
+);
+const categoryKeys = new Set(
+  subjects.flatMap((subject) =>
+    (subject.categories ?? []).map(
+      (category) => `${subject.slug}/${category.slug}`,
+    ),
+  ),
+);
+const planned = JSON.parse(
+  readFileSync(join(root, "src/data/planned-articles.json"), "utf8"),
+).items;
+const plannedKeys = new Set();
+for (const item of planned) {
+  const categoryKey = `${item.subject}/${item.category}`;
+  if (!categoryKeys.has(categoryKey)) {
+    errors.push(`準備中記事が存在しない分野・カテゴリを参照: ${categoryKey}`);
+  }
+  const plannedKey = `${categoryKey}/${item.title.ja}`;
+  if (plannedKeys.has(plannedKey)) {
+    errors.push(`準備中記事が重複: ${plannedKey}`);
+  }
+  plannedKeys.add(plannedKey);
+  if (articleTitleKeys.has(`ja/${plannedKey}`)) {
+    errors.push(`準備中記事が公開済み記事と重複: ${plannedKey}`);
   }
 }
 
@@ -140,5 +173,5 @@ if (errors.length > 0) {
   process.exit(1);
 }
 console.log(
-  `コンテンツ検証OK: 概念${conceptIds.size}件・記事${articleFiles.length}件`,
+  `コンテンツ検証OK: 概念${conceptIds.size}件・記事${articleFiles.length}件・準備中${planned.length}件`,
 );

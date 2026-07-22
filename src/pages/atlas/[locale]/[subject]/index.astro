@@ -17,6 +17,10 @@ import {
   getPublishedArticles,
   getPublishedSubjects,
 } from "../../../../lib/content";
+import {
+  getPlannedArticles,
+  plannedArticleTitle,
+} from "../../../../lib/planned";
 
 export async function getStaticPaths() {
   const subjects = (await getPublishedSubjects()).filter(
@@ -78,6 +82,7 @@ const subjectName = localizedName(subject.data.name, locale);
           const catArticles = subjectArticles.filter(
             (a) => a.data.category === cat.slug,
           );
+          const planned = getPlannedArticles(subject.data.slug, cat.slug);
           return (
             <details open={i === 0}>
               <summary>
@@ -85,10 +90,15 @@ const subjectName = localizedName(subject.data.name, locale);
                 <span class="badge">
                   {t(locale, "articles")}: {catArticles.length}
                 </span>
+                {planned.length > 0 && (
+                  <span class="badge planned-count">
+                    {t(locale, "preparing")}: {planned.length}
+                  </span>
+                )}
               </summary>
               <div class="details-body">
                 <p>{localizedName(cat.description, locale)}</p>
-                {catArticles.length > 0 ? (
+                {catArticles.length > 0 || planned.length > 0 ? (
                   <>
                     <ul class="cat-article-list">
                       {catArticles.slice(0, 8).map((a) => (
@@ -106,6 +116,12 @@ const subjectName = localizedName(subject.data.name, locale);
                           <span class="badge">
                             {difficultyLabel(locale, a.data.difficulty)}
                           </span>
+                        </li>
+                      ))}
+                      {planned.map((item) => (
+                        <li class="planned-article">
+                          <span>{plannedArticleTitle(item, locale)}</span>
+                          <span class="badge">{t(locale, "preparing")}</span>
                         </li>
                       ))}
                     </ul>
@@ -144,6 +160,9 @@ const subjectName = localizedName(subject.data.name, locale);
   .cat-name {
     flex: 1;
   }
+  .planned-count {
+    border-style: dashed;
+  }
   .cat-article-list {
     list-style: none;
     margin: 0;
@@ -158,5 +177,8 @@ const subjectName = localizedName(subject.data.name, locale);
     gap: var(--space-2);
     align-items: baseline;
     padding: var(--space-1) 0;
+  }
+  .planned-article > span:first-child {
+    color: var(--text-secondary);
   }
 </style>

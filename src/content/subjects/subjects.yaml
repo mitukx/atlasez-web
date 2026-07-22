@@ -281,6 +281,61 @@
       order: 3
       entryConceptIds: [physics.oscillations.massive-spring]
       relatedCategoryIds: [newtonian-mechanics]
+    - id: continuum-mechanics
+      slug: continuum-mechanics
+      name: { ja: 拘束系・連続体力学, en: Constrained and Continuum Mechanics }
+      description:
+        ja: 拘束を受ける系、連続体、流体の運動を扱う。
+        en: Constrained systems, continua, and fluid motion.
+      order: 4
+      entryConceptIds: []
+      relatedCategoryIds: [newtonian-mechanics]
+    - id: relativity
+      slug: relativity
+      name: { ja: 相対性理論, en: Relativity }
+      description:
+        ja: 特殊相対性理論と一般相対性理論を学ぶ。
+        en: Special and general relativity.
+      order: 5
+      entryConceptIds: []
+      relatedCategoryIds: [electromagnetism]
+    - id: electromagnetism
+      slug: electromagnetism
+      name: { ja: 電磁気学, en: Electromagnetism }
+      description:
+        ja: 電場・磁場と電磁相互作用を扱う。
+        en: Electric and magnetic fields and their interactions.
+      order: 6
+      entryConceptIds: []
+      relatedCategoryIds: [relativity]
+    - id: thermodynamics
+      slug: thermodynamics
+      name:
+        { ja: 熱力学・統計力学, en: Thermodynamics and Statistical Mechanics }
+      description:
+        ja: 熱・温度と、多数の粒子からなる系を扱う。
+        en: Heat, temperature, and systems of many particles.
+      order: 7
+      entryConceptIds: []
+      relatedCategoryIds: [quantum-mechanics]
+    - id: quantum-mechanics
+      slug: quantum-mechanics
+      name: { ja: 量子力学, en: Quantum Mechanics }
+      description:
+        ja: ミクロな世界を記述する量子論を学ぶ。
+        en: Quantum theory for describing the microscopic world.
+      order: 8
+      entryConceptIds: []
+      relatedCategoryIds: [thermodynamics]
+    - id: analytical-mechanics
+      slug: analytical-mechanics
+      name: { ja: 解析力学, en: Analytical Mechanics }
+      description:
+        ja: 力学をラグランジュ形式やハミルトン形式で捉える。
+        en: Lagrangian and Hamiltonian formulations of mechanics.
+      order: 9
+      entryConceptIds: []
+      relatedCategoryIds: [newtonian-mechanics]
 - id: chemistry
   slug: chemistry
   name: { ja: 化学, en: Chemistry }

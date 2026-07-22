@@ -16,6 +16,10 @@ import {
   getConcepts,
   articlePrerequisiteConceptIds,
 } from "../../../../../lib/content";
+import {
+  getPlannedArticles,
+  plannedArticleTitle,
+} from "../../../../../lib/planned";
 
 export async function getStaticPaths() {
   const subjects = (await getPublishedSubjects()).filter(
@@ -41,6 +45,7 @@ const articles = (await getPublishedArticles(locale)).filter(
 );
 const subjectName = localizedName(subject.data.name, locale);
 const categoryName = localizedName(category.name, locale);
+const planned = getPlannedArticles(subject.data.slug, category.slug);
 
 /** 各記事の表示用データ（前提概念名も解決しておく） */
 const items = articles.map((a) => ({
@@ -160,6 +165,23 @@ const items = articles.map((a) => ({
           </li>
         ))
       }
+      {
+        planned.map((item) => (
+          <li
+            class="article-item card planned-article"
+            data-title={plannedArticleTitle(item, locale)}
+            data-difficulty="planned"
+          >
+            <p class="article-status">{t(locale, "preparing")}</p>
+            <h2 class="article-title">{plannedArticleTitle(item, locale)}</h2>
+            <p class="article-summary">
+              {locale === "ja"
+                ? "現行サイトの目次に掲載されている、本文準備中の記事です。"
+                : "This title appears in the current site's contents; the article is still being prepared."}
+            </p>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </AtlasLayout>
@@ -205,6 +227,16 @@ const items = articles.map((a) => ({
   .article-summary {
     margin: 0;
     color: var(--text-secondary);
+  }
+  .planned-article {
+    border-style: dashed;
+    background: var(--background-secondary);
+  }
+  .article-status {
+    margin: 0;
+    color: var(--accent-primary);
+    font-size: calc(0.82rem * var(--text-scale));
+    font-weight: 700;
   }
   .article-badges,
   .article-actions {
