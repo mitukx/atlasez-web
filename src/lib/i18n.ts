@@ -20,7 +20,8 @@ const ui = {
     saveForLater: "あとで読む",
     saved: "保存済み",
     removeBookmark: "削除",
-    noBookmarks: "保存した記事はまだありません。記事ページの「あとで読む」で保存できます。",
+    noBookmarks:
+      "保存した記事はまだありません。記事ページの「あとで読む」で保存できます。",
     clearBookmarks: "すべて削除",
     bookmarksHint: "保存した記事はこの端末のブラウザ内にのみ記録されます。",
     settings: "表示設定",
@@ -103,9 +104,11 @@ const ui = {
     saveForLater: "Save for later",
     saved: "Saved",
     removeBookmark: "Remove",
-    noBookmarks: "No saved articles yet. Use “Save for later” on any article page.",
+    noBookmarks:
+      "No saved articles yet. Use “Save for later” on any article page.",
     clearBookmarks: "Clear all",
-    bookmarksHint: "Saved articles are stored only in this browser on this device.",
+    bookmarksHint:
+      "Saved articles are stored only in this browser on this device.",
     settings: "Display settings",
     breadcrumbHome: "Atlas",
     articles: "Articles",
