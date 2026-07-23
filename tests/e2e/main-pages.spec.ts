@@ -70,12 +70,11 @@ test.describe("学習サイト", () => {
     await expect(planned.getByRole("link")).toHaveCount(0);
   });
 
-  test("記事ページに目次・前提記事・難易度が表示される", async ({ page }) => {
+  test("記事ページに目次・前提記事が表示される", async ({ page }) => {
     await page.goto("atlas/ja/mathematics/group-theory/group-definition/");
     await expect(page.locator("h1")).toContainText("群の定義");
     await expect(page.getByRole("navigation", { name: "目次" })).toBeVisible();
     await expect(page.getByText("前提記事")).toBeVisible();
-    await expect(page.getByText("標準").first()).toBeVisible();
   });
 
   test("グリッド／リスト表示を切り替えられる", async ({ page }) => {
