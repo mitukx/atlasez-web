@@ -10,7 +10,6 @@ import {
   t,
   LOCALES,
   localizedName,
-  difficultyLabel,
   type Locale,
 } from "../../../../lib/i18n";
 import {
@@ -44,20 +43,10 @@ const categories = [...subject.data.categories].sort(
   (a, b) => a.order - b.order,
 );
 
-/** 目次内の記事並び順: 難易度→推定時間→タイトルの順（学習順の近似） */
-const difficultyRank: Record<string, number> = {
-  introductory: 0,
-  basic: 1,
-  intermediate: 2,
-  advanced: 3,
-};
+/** 目次内の記事並び順: タイトル順 */
 function sortForToc(list: typeof subjectArticles): typeof subjectArticles {
-  return [...list].sort(
-    (a, b) =>
-      (difficultyRank[a.data.difficulty] ?? 9) -
-        (difficultyRank[b.data.difficulty] ?? 9) ||
-      a.data.estimatedMinutes - b.data.estimatedMinutes ||
-      a.data.title.localeCompare(b.data.title, "ja"),
+  return [...list].sort((a, b) =>
+    a.data.title.localeCompare(b.data.title, "ja"),
   );
 }
 
@@ -92,8 +81,13 @@ const subjectName = localizedName(subject.data.name, locale);
     <h1>{subjectName}</h1>
     <p class="reading">{localizedName(subject.data.description, locale)}</p>
     <p>
-      <a class="button button-secondary" href={atlasPath(locale, "map")}>
-        {t(locale, "openMap")}
+      <a
+        class="button button-secondary"
+        href={`${atlasPath(locale, "map")}?subject=${subject.data.slug}`}
+      >
+        {locale === "ja"
+          ? `${subjectName}の地図を開く`
+          : `Open the ${subjectName} map`}
       </a>
       {subject.data.externalUrl && (
         <a
@@ -170,9 +164,6 @@ const subjectName = localizedName(subject.data.name, locale);
                         >
                           {a.data.title}
                         </a>
-                        <span class="badge">
-                          {difficultyLabel(locale, a.data.difficulty)}
-                        </span>
                       </li>
                     ))}
                     {planned.map((item) => (

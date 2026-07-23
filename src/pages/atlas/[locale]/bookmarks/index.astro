@@ -182,7 +182,7 @@ const locale = Astro.params.locale as Locale;
 
     const meta = document.createElement("p");
     meta.className = "bookmark-meta";
-    meta.textContent = [b.subject, b.category, b.difficulty, fmtDate(b.savedAt)]
+    meta.textContent = [b.subject, b.category, fmtDate(b.savedAt)]
       .filter(Boolean)
       .join(" ・ ");
 

@@ -7,7 +7,6 @@ import {
   t,
   LOCALES,
   localizedName,
-  difficultyLabel,
   type Locale,
 } from "../../../../../lib/i18n";
 import {
@@ -103,18 +102,6 @@ const items = articles.map((a) => ({
           data-filter-text
           placeholder={t(locale, "searchPlaceholder")}
         />
-        <label for="filter-difficulty">{t(locale, "difficulty")}</label>
-        <select id="filter-difficulty" data-filter-difficulty>
-          <option value="">{t(locale, "allDifficulties")}</option>
-          <option value="introductory"
-            >{t(locale, "difficulty.introductory")}</option
-          >
-          <option value="basic">{t(locale, "difficulty.basic")}</option>
-          <option value="intermediate"
-            >{t(locale, "difficulty.intermediate")}</option
-          >
-          <option value="advanced">{t(locale, "difficulty.advanced")}</option>
-        </select>
       </div>
     </div>
 
@@ -126,20 +113,12 @@ const items = articles.map((a) => ({
           <li
             class="article-item card"
             data-title={`${a.data.title} ${a.data.summary} ${a.data.tags.join(" ")} ${a.data.aliases.join(" ")}`}
-            data-difficulty={a.data.difficulty}
           >
             <h2 class="article-title">
               <a href={href}>{a.data.title}</a>
             </h2>
             <p class="article-summary">{a.data.summary}</p>
             <p class="article-badges">
-              <span class="badge badge-accent">
-                {difficultyLabel(locale, a.data.difficulty)}
-              </span>
-              <span class="badge">
-                {a.data.estimatedMinutes}
-                {t(locale, "minutes")}
-              </span>
               <span class="badge">
                 {t(locale, "updatedAt")}: {formatDate(a.data.updatedAt, locale)}
               </span>
@@ -171,7 +150,6 @@ const items = articles.map((a) => ({
           <li
             class="article-item card planned-article"
             data-title={plannedArticleTitle(item, locale)}
-            data-difficulty="planned"
           >
             <p class="article-status">{t(locale, "preparing")}</p>
             <h2 class="article-title">{plannedArticleTitle(item, locale)}</h2>
@@ -318,9 +296,6 @@ const items = articles.map((a) => ({
   const textInput = document.querySelector<HTMLInputElement>(
     "[data-filter-text]",
   );
-  const diffSelect = document.querySelector<HTMLSelectElement>(
-    "[data-filter-difficulty]",
-  );
   const status = document.querySelector<HTMLElement>("[data-filter-status]");
 
   function setView(view: string): void {
@@ -348,13 +323,10 @@ const items = articles.map((a) => ({
 
   function applyFilters(): void {
     const q = (textInput?.value ?? "").trim().toLowerCase();
-    const diff = diffSelect?.value ?? "";
     let visible = 0;
     for (const item of items) {
-      const matchText =
+      const show =
         q === "" || (item.dataset.title ?? "").toLowerCase().includes(q);
-      const matchDiff = diff === "" || item.dataset.difficulty === diff;
-      const show = matchText && matchDiff;
       item.hidden = !show;
       if (show) visible += 1;
     }
@@ -363,5 +335,4 @@ const items = articles.map((a) => ({
     }
   }
   textInput?.addEventListener("input", applyFilters);
-  diffSelect?.addEventListener("change", applyFilters);
 </script>

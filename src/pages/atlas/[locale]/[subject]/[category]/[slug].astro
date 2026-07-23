@@ -122,9 +122,6 @@ const structuredData = {
   publisher: { "@type": "Organization", name: "Atlasez" },
 };
 
-const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
-  typeof t
->[1];
 ---
 
 <AtlasLayout
@@ -172,9 +169,6 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
         {/* Pagefind用のフィルタ・メタデータ（検索の絞り込みに使用） */}
         <span data-pagefind-filter="subject">{subjectName}</span>
         <span data-pagefind-filter="category">{categoryName}</span>
-        <span data-pagefind-filter="difficulty"
-          >{t(locale, difficultyKey)}</span
-        >
         <span data-pagefind-filter="locale">{localeNames[locale]}</span>
         <span data-pagefind-meta="summary">{entry.data.summary}</span>
         {entry.data.aliases.map((al) => <span>{al}</span>)}
@@ -186,11 +180,6 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
         <h1 id="article-title">{entry.data.title}</h1>
         <p class="article-summary">{entry.data.summary}</p>
         <p class="article-badges">
-          <span class="badge badge-accent">{t(locale, difficultyKey)}</span>
-          <span class="badge">
-            {t(locale, "estimatedMinutes")}: {entry.data.estimatedMinutes}
-            {t(locale, "minutes")}
-          </span>
           <span class="badge">
             {t(locale, "updatedAt")}:
             <time datetime={entry.data.updatedAt.toISOString().slice(0, 10)}>
@@ -213,7 +202,6 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
           )}
           data-subject={subjectName}
           data-category={categoryName}
-          data-difficulty={t(locale, difficultyKey)}
           data-summary={entry.data.summary}
           data-label-save={t(locale, "saveForLater")}
           data-label-saved={t(locale, "saved")}
@@ -631,7 +619,6 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
         href: d.href ?? "",
         subject: d.subject ?? "",
         category: d.category ?? "",
-        difficulty: d.difficulty ?? "",
         summary: d.summary ?? "",
       });
       render(on);

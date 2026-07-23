@@ -100,10 +100,12 @@ const alternates = LOCALES.map((l) => ({
             </div>
             <p class="member-affiliation">{member.affiliation}</p>
             {member.bio && (
-              <details>
-                <summary>{locale === "ja" ? "自己紹介" : "Profile (Japanese)"}</summary>
-                <p class="details-body">{member.bio}</p>
-              </details>
+              <div class="member-bio">
+                <h3 class="member-bio-label">
+                  {locale === "ja" ? "自己紹介" : "Profile (Japanese)"}
+                </h3>
+                <p>{member.bio}</p>
+              </div>
             )}
           </li>
         ))
@@ -239,6 +241,18 @@ const alternates = LOCALES.map((l) => ({
   .member-list details {
     margin-top: var(--space-2);
     font-size: calc(0.88rem * var(--text-scale));
+  }
+  .member-bio {
+    margin-top: var(--space-2);
+    font-size: calc(0.88rem * var(--text-scale));
+  }
+  .member-bio-label {
+    margin: 0 0 var(--space-1);
+    font-size: calc(0.82rem * var(--text-scale));
+    color: var(--text-secondary);
+  }
+  .member-bio p {
+    margin: 0;
   }
   .member-list details summary {
     padding-inline: 0;

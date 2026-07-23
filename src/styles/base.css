@@ -159,7 +159,7 @@ button.button {
   color: var(--accent-hover);
 }
 
-/* バッジ（難易度・状態など。色だけに依存しないよう文字を必ず持つ） */
+/* バッジ（状態など。色だけに依存しないよう文字を必ず持つ） */
 .badge {
   display: inline-block;
   padding: 0.1em 0.6em;

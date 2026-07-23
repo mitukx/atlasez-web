@@ -10,7 +10,6 @@ export interface Bookmark {
   href: string;
   subject: string;
   category: string;
-  difficulty: string;
   summary: string;
   savedAt: number;
 }
