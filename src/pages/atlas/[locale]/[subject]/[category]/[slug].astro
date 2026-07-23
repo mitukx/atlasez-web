@@ -198,6 +198,30 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
             </time>
           </span>
         </p>
+        <button
+          type="button"
+          class="bookmark-btn"
+          data-bookmark-toggle
+          data-article-id={entry.data.articleId}
+          data-locale={locale}
+          data-title={entry.data.title}
+          data-href={articlePath(
+            locale,
+            entry.data.subject,
+            entry.data.category,
+            entry.data.slug,
+          )}
+          data-subject={subjectName}
+          data-category={categoryName}
+          data-difficulty={t(locale, difficultyKey)}
+          data-summary={entry.data.summary}
+          data-label-save={t(locale, "saveForLater")}
+          data-label-saved={t(locale, "saved")}
+          aria-pressed="false"
+        >
+          <span data-bookmark-icon aria-hidden="true">☆</span>
+          <span data-bookmark-label>{t(locale, "saveForLater")}</span>
+        </button>
         {
           [...translations.entries()].length > 0 && (
             <p class="translation-info">
@@ -425,6 +449,27 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
     gap: var(--space-1);
     flex-wrap: wrap;
   }
+  .bookmark-btn {
+    margin-top: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius, 4px);
+    background: transparent;
+    color: var(--accent-primary);
+    font: inherit;
+    font-size: calc(0.9rem * var(--text-scale));
+    cursor: pointer;
+  }
+  .bookmark-btn:hover {
+    background: var(--accent-subtle);
+  }
+  .bookmark-btn[aria-pressed="true"] {
+    background: var(--accent-primary);
+    color: var(--bg, #fff);
+  }
   .translation-info {
     font-size: calc(0.9rem * var(--text-scale));
   }
@@ -557,4 +602,39 @@ const difficultyKey = `difficulty.${entry.data.difficulty}` as Parameters<
   const mq = window.matchMedia("(max-width: 1023px)");
   const details = document.querySelector<HTMLDetailsElement>(".toc-details");
   if (details && mq.matches) details.open = false;
+</script>
+
+<script>
+  // 「あとで読む」ボタンの保存状態の反映とトグル
+  import { toggleBookmark, isBookmarked } from "../../../../../lib/bookmarks";
+
+  const btn = document.querySelector<HTMLButtonElement>("[data-bookmark-toggle]");
+  if (btn) {
+    const d = btn.dataset;
+    const labelEl = btn.querySelector<HTMLElement>("[data-bookmark-label]");
+    const iconEl = btn.querySelector<HTMLElement>("[data-bookmark-icon]");
+    const articleId = d.articleId ?? "";
+
+    const render = (on: boolean) => {
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      if (labelEl) labelEl.textContent = on ? d.labelSaved ?? "" : d.labelSave ?? "";
+      if (iconEl) iconEl.textContent = on ? "★" : "☆";
+    };
+
+    render(isBookmarked(articleId));
+
+    btn.addEventListener("click", () => {
+      const on = toggleBookmark({
+        articleId,
+        locale: d.locale ?? "",
+        title: d.title ?? "",
+        href: d.href ?? "",
+        subject: d.subject ?? "",
+        category: d.category ?? "",
+        difficulty: d.difficulty ?? "",
+        summary: d.summary ?? "",
+      });
+      render(on);
+    });
+  }
 </script>

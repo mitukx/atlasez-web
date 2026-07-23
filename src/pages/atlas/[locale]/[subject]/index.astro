@@ -44,6 +44,27 @@ const categories = [...subject.data.categories].sort(
   (a, b) => a.order - b.order,
 );
 
+/** 目次内の記事並び順: 難易度→推定時間→タイトルの順（学習順の近似） */
+const difficultyRank: Record<string, number> = {
+  introductory: 0,
+  basic: 1,
+  intermediate: 2,
+  advanced: 3,
+};
+function sortForToc(list: typeof subjectArticles): typeof subjectArticles {
+  return [...list].sort(
+    (a, b) =>
+      (difficultyRank[a.data.difficulty] ?? 9) -
+        (difficultyRank[b.data.difficulty] ?? 9) ||
+      a.data.estimatedMinutes - b.data.estimatedMinutes ||
+      a.data.title.localeCompare(b.data.title, "ja"),
+  );
+}
+
+/** 分野全体の記事数（公開＋準備中） */
+const totalPublished = subjectArticles.length;
+const totalPlanned = getPlannedArticles(subject.data.slug).length;
+
 const alternates = LOCALES.map((l) => ({
   hreflang: l,
   href: new URL(atlasPath(l, subject.data.slug), Astro.site).href,
@@ -56,6 +77,7 @@ const subjectName = localizedName(subject.data.name, locale);
   title={subjectName}
   description={localizedName(subject.data.description, locale)}
   alternates={alternates}
+  noindex={subjectArticles.length === 0}
   localeSwitchHrefs={Object.fromEntries(
     LOCALES.map((l) => [l, atlasPath(l, subject.data.slug)]),
   )}
@@ -73,110 +95,185 @@ const subjectName = localizedName(subject.data.name, locale);
       <a class="button button-secondary" href={atlasPath(locale, "map")}>
         {t(locale, "openMap")}
       </a>
+      {subject.data.externalUrl && (
+        <a
+          class="subject-external-link"
+          href={subject.data.externalUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {locale === "ja"
+            ? "現行サイト（移行元）を見る ↗"
+            : "View the current (source) site ↗"}
+        </a>
+      )}
     </p>
 
-    <h2 class="visually-hidden">{t(locale, "category")}</h2>
-    <div class="category-sections">
-      {
-        categories.map((cat, i) => {
-          const catArticles = subjectArticles.filter(
-            (a) => a.data.category === cat.slug,
-          );
-          const planned = getPlannedArticles(subject.data.slug, cat.slug);
-          return (
-            <details open={i === 0}>
-              <summary>
-                <span class="cat-name">{localizedName(cat.name, locale)}</span>
-                <span class="badge">
-                  {t(locale, "articles")}: {catArticles.length}
-                </span>
-                {planned.length > 0 && (
-                  <span class="badge planned-count">
-                    {t(locale, "preparing")}: {planned.length}
+    <section class="subject-toc" aria-labelledby="toc-heading">
+      <div class="toc-heading-row">
+        <h2 id="toc-heading">
+          {locale === "ja"
+            ? `${subjectName}の目次`
+            : `${subjectName} — Contents`}
+        </h2>
+        <span class="toc-total">
+          {t(locale, "articles")}: {totalPublished}
+          {totalPlanned > 0 && (
+            <> / {t(locale, "preparing")}: {totalPlanned}</>
+          )}
+        </span>
+      </div>
+
+      <ol class="toc-categories">
+        {
+          categories.map((cat) => {
+            const catArticles = sortForToc(
+              subjectArticles.filter((a) => a.data.category === cat.slug),
+            );
+            const planned = getPlannedArticles(subject.data.slug, cat.slug);
+            const empty = catArticles.length === 0 && planned.length === 0;
+            return (
+              <li class="toc-category">
+                <div class="toc-cat-head">
+                  <h3>
+                    <a href={atlasPath(locale, subject.data.slug, cat.slug)}>
+                      {localizedName(cat.name, locale)}
+                    </a>
+                  </h3>
+                  <span class="badge">
+                    {t(locale, "articles")}: {catArticles.length}
                   </span>
-                )}
-              </summary>
-              <div class="details-body">
-                <p>{localizedName(cat.description, locale)}</p>
-                {catArticles.length > 0 || planned.length > 0 ? (
-                  <>
-                    <ul class="cat-article-list">
-                      {catArticles.slice(0, 8).map((a) => (
-                        <li>
-                          <a
-                            href={articlePath(
-                              locale,
-                              a.data.subject,
-                              a.data.category,
-                              a.data.slug,
-                            )}
-                          >
-                            {a.data.title}
-                          </a>
-                          <span class="badge">
-                            {difficultyLabel(locale, a.data.difficulty)}
-                          </span>
-                        </li>
-                      ))}
-                      {planned.map((item) => (
-                        <li class="planned-article">
-                          <span>{plannedArticleTitle(item, locale)}</span>
-                          <span class="badge">{t(locale, "preparing")}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p>
-                      <a
-                        href={atlasPath(locale, subject.data.slug, cat.slug)}
-                      >
-                        {locale === "ja"
-                          ? `${localizedName(cat.name, locale)}の記事一覧 ›`
-                          : `All articles in ${localizedName(cat.name, locale)} ›`}
-                      </a>
-                    </p>
-                  </>
-                ) : (
-                  <p>
+                  {planned.length > 0 && (
+                    <span class="badge planned-count">
+                      {t(locale, "preparing")}: {planned.length}
+                    </span>
+                  )}
+                </div>
+                <p class="toc-cat-desc">
+                  {localizedName(cat.description, locale)}
+                </p>
+                {empty ? (
+                  <p class="toc-empty">
                     <span class="badge">{t(locale, "preparing")}</span>
                   </p>
+                ) : (
+                  <ol class="toc-articles">
+                    {catArticles.map((a) => (
+                      <li>
+                        <a
+                          href={articlePath(
+                            locale,
+                            a.data.subject,
+                            a.data.category,
+                            a.data.slug,
+                          )}
+                        >
+                          {a.data.title}
+                        </a>
+                        <span class="badge">
+                          {difficultyLabel(locale, a.data.difficulty)}
+                        </span>
+                      </li>
+                    ))}
+                    {planned.map((item) => (
+                      <li class="planned-article">
+                        <span>{plannedArticleTitle(item, locale)}</span>
+                        <span class="badge">{t(locale, "preparing")}</span>
+                      </li>
+                    ))}
+                  </ol>
                 )}
-              </div>
-            </details>
-          );
-        })
-      }
-    </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </section>
   </div>
 </AtlasLayout>
 
 <style>
-  .category-sections {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+  .subject-external-link {
+    margin-left: var(--space-3);
+    font-size: calc(0.9rem * var(--text-scale));
+  }
+  .subject-toc {
     max-width: var(--content-width);
     margin-top: var(--space-4);
   }
-  .cat-name {
+  .toc-heading-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: var(--space-1);
+    margin-bottom: var(--space-3);
+  }
+  .toc-heading-row h2 {
+    margin: 0;
+  }
+  .toc-total {
+    color: var(--text-secondary);
+    font-size: calc(0.85rem * var(--text-scale));
+    white-space: nowrap;
+  }
+  .toc-categories {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    counter-reset: toc-cat;
+  }
+  .toc-category {
+    counter-increment: toc-cat;
+  }
+  .toc-cat-head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .toc-cat-head h3 {
+    margin: 0;
     flex: 1;
+  }
+  .toc-cat-head h3::before {
+    content: counter(toc-cat) ". ";
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
   }
   .planned-count {
     border-style: dashed;
   }
-  .cat-article-list {
+  .toc-cat-desc {
+    margin: var(--space-1) 0 var(--space-2);
+    color: var(--text-secondary);
+    font-size: calc(0.9rem * var(--text-scale));
+  }
+  .toc-empty {
+    margin: 0 0 0 var(--space-3);
+  }
+  .toc-articles {
     list-style: none;
     margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-    gap: var(--space-2);
+    padding: 0 0 0 var(--space-3);
+    border-left: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
   }
-  .cat-article-list li {
+  .toc-articles li {
     display: flex;
     justify-content: space-between;
     gap: var(--space-2);
     align-items: baseline;
     padding: var(--space-1) 0;
+  }
+  .toc-articles li + li {
+    border-top: 1px solid var(--border);
   }
   .planned-article > span:first-child {
     color: var(--text-secondary);

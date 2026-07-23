@@ -79,6 +79,16 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
       </dl>
     </section>
 
+    {
+      locale !== "ja" && (
+        <p class="beta-notice" role="note">
+          The English edition is in beta — only a limited set of articles has
+          been translated so far. For full content, see the Japanese edition or
+          the current site linked on each subject.
+        </p>
+      )
+    }
+
     <div class="content-columns">
       <section aria-labelledby="subjects-heading">
         <div class="section-title">
@@ -101,6 +111,19 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
                   </span>
                 </div>
                 <p>{localizedName(s.data.description, locale)}</p>
+                {s.data.externalUrl && (
+                  <p class="subject-external">
+                    <a
+                      href={s.data.externalUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {locale === "ja"
+                        ? "現行サイトも見る ↗"
+                        : "View on current site ↗"}
+                    </a>
+                  </p>
+                )}
               </li>
             ))
           }
@@ -280,6 +303,21 @@ const preparingSubjects = subjects.filter((s) => s.data.status === "preparing");
     margin-top: var(--space-1);
     color: var(--text-secondary);
     font-size: calc(0.92rem * var(--text-scale));
+  }
+  .subject-external {
+    margin-top: var(--space-1);
+    font-size: calc(0.82rem * var(--text-scale));
+  }
+  .beta-notice {
+    margin: 0 0 var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent, var(--text-secondary));
+    border-radius: var(--radius, 4px);
+    background: var(--surface, transparent);
+    color: var(--text-secondary);
+    font-size: calc(0.9rem * var(--text-scale));
+    max-width: var(--content-width);
   }
   .preparing-subjects {
     margin-top: var(--space-4);

@@ -64,6 +64,7 @@ const items = articles.map((a) => ({
   locale={locale}
   title={`${categoryName} - ${subjectName}`}
   description={localizedName(category.description, locale)}
+  noindex={articles.length === 0 && planned.length === 0}
   localeSwitchHrefs={Object.fromEntries(
     LOCALES.map((l) => [l, atlasPath(l, subject.data.slug, category.slug)]),
   )}
